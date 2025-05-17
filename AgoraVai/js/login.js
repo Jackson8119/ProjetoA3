@@ -1,27 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('login-form');
   const errorMessage = document.getElementById('error-message');
-  const passwordInput = document.getElementById('password');
   const togglePassword = document.querySelector('.toggle-password');
+  const passwordInput = document.getElementById('password');
 
-  // Função para carregar usuários do localStorage
-  const loadUsers = () => {
-    const users = localStorage.getItem('users');
-    return users ? JSON.parse(users) : [];
-  };
+  // Carregar dados iniciais
+  if (!localStorage.getItem('users')) {
+    const initialUsers = [
+      {
+        username: "admin",
+        password: "admin123",
+        tipo: "Administrador",
+        email: "admin@exemplo.com",
+        nomeCompleto: "Administrador do Sistema"
+      },
+      {
+        username: "gerenciador",
+        password: "ger123",
+        tipo: "Gerenciador",
+        email: "gerenciador@exemplo.com",
+        nomeCompleto: "Gerenciador Teste"
+      },
+      {
+        username: "operador",
+        password: "op123",
+        tipo: "Operador",
+        email: "operador@exemplo.com",
+        nomeCompleto: "Operador Teste"
+      }
+    ];
+    localStorage.setItem('users', JSON.stringify(initialUsers));
+  }
 
-  // Mostrar/esconder senha
   togglePassword.addEventListener('click', () => {
     const type = passwordInput.type === 'password' ? 'text' : 'password';
     passwordInput.type = type;
     togglePassword.textContent = type === 'password' ? '👁' : '🙈';
   });
 
-  // Submissão do formulário
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const username = document.getElementById('username').value.trim();
-    const password = passwordInput.value.trim();
+    const password = document.getElementById('password').value.trim();
 
     if (!username || !password) {
       errorMessage.textContent = 'Por favor, preencha todos os campos.';
@@ -29,30 +49,22 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const users = loadUsers();
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    console.log('Usuários no localStorage:', users); // Para depuração
     const user = users.find(u => u.username === username && u.password === password);
 
-    if (!user) {
-      errorMessage.textContent = 'Usuário ou senha inválidos.';
-      errorMessage.style.display = 'block';
-      return;
-    }
-
-    errorMessage.style.display = 'none';
-    // Redirecionar com base no tipo de usuário
-    switch (user.tipo) {
-      case 'Administrador':
-        window.location.href = 'dashboard-admin.html';
-        break;
-      case 'Gerenciador':
+    if (user) {
+      errorMessage.style.display = 'none';
+      localStorage.setItem('loggedUser', JSON.stringify(user));
+      if (user.tipo === 'Gerenciador') {
         window.location.href = 'dashboard-gerenciador.html';
-        break;
-      case 'Operador':
-        window.location.href = 'dashboard-operador.html';
-        break;
-      default:
-        errorMessage.textContent = 'Tipo de usuário inválido.';
+      } else {
+        errorMessage.textContent = 'Dashboard não implementado para este tipo de usuário.';
         errorMessage.style.display = 'block';
+      }
+    } else {
+      errorMessage.textContent = 'Nome de usuário ou senha incorretos.';
+      errorMessage.style.display = 'block';
     }
   });
 });

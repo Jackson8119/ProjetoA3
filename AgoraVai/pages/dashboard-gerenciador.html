@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Gerenciador - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Estilos gerais */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #000000;
+      min-height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #D32F2F;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .alert-icon {
+      font-size: 40px;
+      color: #FFFF00;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 700;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-right span#user-info {
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+    .navbar-right .user-role {
+      background-color: #FF5252;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+    .container {
+      display: flex;
+      margin-top: 100px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444444;
+      padding: 20px;
+      position: fixed;
+      height: calc(100vh - 100px);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: #FFA500;
+    }
+    main {
+      flex: 1;
+      margin-left: 220px;
+      padding: 30px;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #000000;
+    }
+    #search-input {
+      width: 100%;
+      padding: 10px 10px 10px 35px;
+      font-size: 16px;
+      border: 1px solid #555555;
+      border-radius: 5px;
+    }
+    .header-bar button {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: 1px solid #FFFFFF;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .header-bar button:hover {
+      background-color: #A52A2A;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .plano-card {
+      background-color: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+    }
+    .plano-left {
+      width: 70%;
+    }
+    .plano-left h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+    .plano-left p.description {
+      font-size: 16px;
+      font-weight: 700;
+      color: #555555;
+      margin: 5px 0;
+    }
+    .plano-left p:not(.description) {
+      font-size: 14px;
+      color: #555555;
+      margin: 5px 0;
+    }
+    .plano-left .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .plano-right {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .plano-right .tags {
+      width: 100%;
+      min-height: 60px;
+      background-color: #F0F0F0; /* Fundo cinza claro para depuração */
+      margin-bottom: 10px;
+    }
+    .plano-right .tag {
+      display: block !important;
+      padding: 6px 12px;
+      border-radius: 8px !important;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-align: center;
+      width: 100% !important;
+      box-sizing: border-box;
+      z-index: 10;
+      position: relative;
+      opacity: 1 !important;
+      visibility: visible !important;
+      background-color: #FFCA28 !important; /* Fallback para depuração */
+      color: #000000 !important;
+      border: 2px solid #FF0000 !important; /* Borda vermelha para depuração */
+    }
+    .plano-right .tag.urgencia-media,
+    .plano-right .tag.impacto-media {
+      background-color: #FFCA28 !important;
+      color: #000000 !important;
+    }
+    .plano-right .tag.urgencia-baixa,
+    .plano-right .tag.impacto-baixa {
+      background-color: #4CAF50 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.urgencia-alta,
+    .plano-right .tag.impacto-alta {
+      background-color: #D32F2F !important;
+      color: #FFFFFF !important;
+    }
+    .plano-left .tag.nao-iniciado {
+      background-color: #B0BEC5;
+      color: #000000;
+    }
+    .plano-left .tag.em-andamento {
+      background-color: #FFCA28;
+      color: #000000;
+    }
+    .plano-left .tag.finalizado {
+      background-color: #4CAF50;
+      color: #FFFFFF;
+    }
+    .plano-right button {
+      background-color: #1976D2;
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .plano-right button:hover {
+      background-color: #1565C0;
+    }
+    .message {
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+    }
+    .message.error {
+      color: #D32F2F;
+    }
+    .message.success {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="alert-icon">⚠</span>
+        <h1>Sistema de Gestão de Riscos</h1>
+      </div>
+      <div class="navbar-right">
+        <span id="user-info"></span>
+        <span class="user-role">Gerenciador</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="dashboard-gerenciador.html" class="active">📋 Planos de Ação</a></li>
+        <li><a href="criar-etapa.html">📑 Etapas</a></li>
+        <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
+        <li><a href="criar-area.html">📂 Áreas</a></li>
+        <li><a href="login.html">🚪 Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <div class="header-bar">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Pesquisar por título" aria-label="Pesquisar planos de ação">
+        </div>
+        <button onclick="window.location.href='criar-plano.html'">➕ Novo Plano de Ação</button>
+      </div>
+      <h2>Planos de Ação</h2>
+      <div id="planos-list"></div>
+      <p id="message" class="message"></p>
+    </main>
+  </div>
+  <script src="../js/dashboard-gerenciador.js" onload="console.log('JS carregado com sucesso')" onerror="console.error('Erro ao carregar JS: ../js/dashboard-gerenciador.js')"></script>
+</body>
+</html>

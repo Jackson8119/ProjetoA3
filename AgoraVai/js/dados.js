@@ -1,24 +1,19 @@
-///Dados dos usuários usados para fins de testes no protótipo.
-[
+// Forçar reinicialização dos planos para testes
+localStorage.removeItem('planos'); // Remove chave antiga (remover após testar)
+
+const initialPlanos = [
   {
-    "username": "admin",
-    "password": "admin123",
-    "tipo": "Administrador",
-    "email": "admin@exemplo.com",
-    "nomeCompleto": "Administrador do Sistema"
-  },
-  {
-    "username": "gerenciador",
-    "password": "ger123",
-    "tipo": "Gerenciador",
-    "email": "gerenciador@exemplo.com",
-    "nomeCompleto": "Gerenciador Teste"
-  },
-  {
-    "username": "operador",
-    "password": "op123",
-    "tipo": "Operador",
-    "email": "operador@exemplo.com",
-    "nomeCompleto": "Operador Teste"
+    id: '1',
+    titulo: 'Plano de Mitigação',
+    descricao: 'Mitigar risco de falha no servidor',
+    dataCriacao: '14/05/2025',
+    areaResponsavel: 'TI',
+    ativosImpactados: ['Servidor A'],
+    areasImpactadas: ['TI', 'Produção'],
+    urgencia: 'Médio',
+    impacto: 'Médio',
+    etapas: []
   }
-]
+];
+localStorage.setItem('planos', JSON.stringify(initialPlanos));
+console.log('Planos inicializados:', JSON.parse(localStorage.getItem('planos')));
