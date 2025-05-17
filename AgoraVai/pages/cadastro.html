@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/cadastro.css">
+</head>
+<body>
+  <header>
+    <div class="banner">
+      <span class="alert-icon">⚠</span>
+      <h1>Sistema de Gestão de Riscos</h1>
+    </div>
+  </header>
+  <main>
+    <form id="cadastro-form">
+      <h2>Cadastrar Novo Usuário</h2>
+      <p class="subtitle">Preencha os dados abaixo para criar sua conta</p>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="Digite seu e-mail" aria-label="E-mail" required>
+      </div>
+      <div class="form-group">
+        <label for="nome-completo">Nome Completo</label>
+        <input type="text" id="nome-completo" name="nome-completo" placeholder="Digite seu nome completo" aria-label="Nome completo" required>
+      </div>
+      <div class="form-group">
+        <label for="username">Nome de Usuário</label>
+        <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" aria-label="Nome de usuário" required>
+      </div>
+      <div class="form-group password-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" placeholder="Digite sua senha" aria-label="Senha" required>
+        <span class="toggle-password" aria-label="Mostrar ou esconder senha">👁</span>
+      </div>
+      <div class="form-group password-group">
+        <label for="confirm-password">Confirmação de Senha</label>
+        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirme sua senha" aria-label="Confirmação de senha" required>
+        <span class="toggle-password" aria-label="Mostrar ou esconder confirmação de senha">👁</span>
+      </div>
+      <button type="submit">Cadastrar</button>
+      <p id="error-message" class="error-message"></p>
+      <p class="login-link">Já tem uma conta? <a href="login.html">Faça login</a></p>
+    </form>
+  </main>
+  <script src="../js/cadastro.js"></script>
+</body>
+</html>
