@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Etapa do Plano - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #000000;
+      min-height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #D32F2F;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .alert-icon {
+      font-size: 40px;
+      color: #FFFF00;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 700;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-right span#user-info {
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+    .navbar-right .user-role {
+      background-color: #FF5252;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+    .container {
+      display: flex;
+      margin-top: 100px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444444;
+      padding: 20px;
+      position: fixed;
+      height: calc(100vh - 100px);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: #FFA500;
+    }
+    main {
+      flex: 1;
+      margin-left: 220px;
+      padding: 30px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .form-container {
+      background-color: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: calc(100% - 40px);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #555555;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .form-group textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    .form-group .warning {
+      color: #D32F2F;
+      font-size: 12px;
+      display: none;
+    }
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .buttons button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .buttons .save-btn {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+    }
+    .buttons .save-btn:hover {
+      background-color: #A52A2A;
+    }
+    .buttons .cancel-btn {
+      background-color: #999999;
+      color: #FFFFFF;
+    }
+    .buttons .cancel-btn:hover {
+      background-color: #666666;
+    }
+    .message {
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+    .message.error {
+      color: #D32F2F;
+    }
+    .message.success {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="alert-icon">⚠</span>
+        <h1>Sistema de Gestão de Riscos</h1>
+      </div>
+      <div class="navbar-right">
+        <span id="user-info"></span>
+        <span class="user-role">Gerenciador</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="dashboard-gerenciador.html">📋 Planos de Ação</a></li>
+        <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
+        <li><a href="criar-area.html">📂 Áreas</a></li>
+        <li><a href="login.html">🚪 Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Criar Etapa do Plano</h2>
+      <div class="form-container">
+        <form id="etapa-form">
+          <div class="form-group">
+            <label for="etapa-titulo">Título da Etapa *</label>
+            <input type="text" id="etapa-titulo" name="etapa-titulo" required>
+          </div>
+          <div class="form-group">
+            <label for="etapa-posicao">Posição da Etapa *</label>
+            <input type="number" id="etapa-posicao" name="etapa-posicao" min="1" required>
+          </div>
+          <div class="form-group">
+            <label for="etapa-area">Área Responsável *</label>
+            <select id="etapa-area" name="etapa-area" required>
+              <option value="" disabled selected>Selecione uma área</option>
+              <!-- Áreas serão preenchidas via JS -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="etapa-acao">Ação a ser Realizada *</label>
+            <textarea id="etapa-acao" name="etapa-acao" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="etapa-duracao">Duração Recomendada (em minutos) *</label>
+            <input type="number" id="etapa-duracao" name="etapa-duracao" required>
+            <span id="duracao-warning" class="warning">Duração excedida! (Máximo: 600 minutos)</span>
+          </div>
+          <div class="buttons">
+            <button type="button" class="cancel-btn" onclick="cancelCreation()">Cancelar</button>
+            <button type="submit" class="save-btn">Salvar</button>
+          </div>
+        </form>
+        <p id="message" class="message"></p>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = document.getElementById('user-info');
+      const etapaForm = document.getElementById('etapa-form');
+      const message = document.getElementById('message');
+      const duracaoWarning = document.getElementById('duracao-warning');
+      const etapaAreaSelect = document.getElementById('etapa-area');
+      const etapaTitulo = document.getElementById('etapa-titulo');
+      const etapaPosicao = document.getElementById('etapa-posicao');
+      const etapaAcao = document.getElementById('etapa-acao');
+      const etapaDuracao = document.getElementById('etapa-duracao');
+
+      // Carregar usuário logado
+      const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+      if (loggedUser && loggedUser.tipo === 'Gerenciador') {
+        userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
+      } else {
+        window.location.href = 'login.html';
+      }
+
+      // Carregar planoId da URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const planoId = parseInt(urlParams.get('planoId'));
+      if (isNaN(planoId)) {
+        alert('Plano não encontrado.');
+        window.location.href = 'dashboard-gerenciador.html';
+        return;
+      }
+
+      // Carregar áreas do localStorage
+      const loadAreas = () => {
+        const areas = localStorage.getItem('areas');
+        return areas ? JSON.parse(areas) : [];
+      };
+
+      // Preencher dropdown de áreas
+      const populateAreas = () => {
+        const areas = loadAreas();
+        etapaAreaSelect.innerHTML = '<option value="" disabled selected>Selecione uma área</option>';
+        areas.forEach(area => {
+          const option = document.createElement('option');
+          option.value = area;
+          option.textContent = area;
+          etapaAreaSelect.appendChild(option);
+        });
+      };
+
+      // Carregar planos do localStorage
+      const loadPlanos = () => {
+        const planos = localStorage.getItem('planos');
+        return planos ? JSON.parse(planos) : [];
+      };
+
+      // Carregar plano
+      const planos = loadPlanos();
+      const plano = planos[planoId];
+      if (!plano) {
+        alert('Plano não encontrado.');
+        window.location.href = 'dashboard-gerenciador.html';
+        return;
+      }
+
+      // Preencher áreas
+      populateAreas();
+
+      // Sugerir próxima posição
+      etapaPosicao.value = (plano.etapas?.length || 0) + 1;
+
+      // Função para cancelar a criação
+      const cancelCreation = () => {
+        window.location.href = `criar-etapa.html?planoId=${planoId}`;
+      };
+
+      // Manipular envio do formulário
+      etapaForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const titulo = etapaTitulo.value.trim();
+        const posicao = parseInt(etapaPosicao.value);
+        const area = etapaAreaSelect.value;
+        const acao = etapaAcao.value.trim();
+        const duracao = parseInt(etapaDuracao.value);
+
+        if (!titulo || !posicao || !area || !acao || isNaN(duracao)) {
+          message.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        if (duracao > 600) {
+          duracaoWarning.style.display = 'block';
+          return;
+        }
+
+        if (plano.etapas && plano.etapas.some(etapa => etapa.titulo === titulo)) {
+          message.textContent = 'Já existe uma etapa com este título.';
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        // Criar nova etapa
+        const novaEtapa = {
+          titulo,
+          posicao,
+          area,
+          acao,
+          duracao: duracao.toString(),
+          status: 'nao-iniciado',
+          elapsedTime: 0,
+          currentElapsed: 0,
+          startTime: null
+        };
+
+        // Adicionar etapa ao plano
+        if (!plano.etapas) plano.etapas = [];
+        const novaPosicao = Math.max(1, Math.min(posicao, plano.etapas.length + 1));
+        plano.etapas.splice(novaPosicao - 1, 0, novaEtapa);
+        // Reajustar posições
+        plano.etapas.forEach((etapa, idx) => {
+          etapa.posicao = idx + 1;
+        });
+
+        // Atualizar plano no localStorage
+        planos[planoId] = plano;
+        localStorage.setItem('planos', JSON.stringify(planos));
+        message.textContent = 'Etapa criada com sucesso!';
+        message.className = 'message success';
+        message.style.display = 'block';
+
+        setTimeout(() => {
+          message.style.display = 'none';
+          window.location.href = `criar-etapa.html?planoId=${planoId}`;
+        }, 2000);
+      });
+
+      // Expor função ao escopo global
+      window.cancelCreation = cancelCreation;
+    });
+  </script>
+</body>
+</html>

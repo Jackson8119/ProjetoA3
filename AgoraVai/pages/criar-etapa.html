@@ -93,10 +93,16 @@
       margin-left: 220px;
       padding: 30px;
     }
+    .title-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
     h2 {
       font-size: 24px;
       font-weight: 700;
-      margin: 0 0 20px;
+      margin: 0;
     }
     .cards-container {
       display: flex;
@@ -110,12 +116,10 @@
       padding: 15px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .card.plano-info {
-      flex: 1;
-      display: flex;
-      gap: 20px;
+    .card.plano-details {
+      flex: 3;
     }
-    .plano-details, .plano-status {
+    .card.plano-status {
       flex: 1;
     }
     .plano-details h3, .plano-status h3 {
@@ -123,10 +127,18 @@
       font-weight: 700;
       margin: 0 0 10px;
     }
+    .plano-details .info-row {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 10px;
+    }
     .plano-details p {
       font-size: 14px;
       color: #555555;
       margin: 5px 0;
+    }
+    .plano-details .spacer {
+      margin-bottom: 20px;
     }
     .plano-status .tag {
       display: block;
@@ -197,7 +209,12 @@
       font-weight: 700;
       margin: 0;
     }
-    .etapas-header button {
+    .etapas-header .button-group {
+      display: flex;
+      gap: 10px;
+    }
+    .etapas-header button,
+    .title-container button {
       background-color: #D32F2F;
       color: #FFFFFF;
       border: none;
@@ -205,7 +222,8 @@
       border-radius: 5px;
       cursor: pointer;
     }
-    .etapas-header button:hover {
+    .etapas-header button:hover,
+    .title-container button:hover {
       background-color: #A52A2A;
     }
     .etapa-item {
@@ -217,26 +235,38 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 15px;
     }
     .etapa-header h4 {
       font-size: 16px;
       font-weight: 700;
       margin: 0;
     }
-    .etapa-header button {
-      background-color: #1976D2;
-      color: #FFFFFF;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
+    .etapa-header .etapa-actions {
+      display: flex;
+      gap: 5px;
+      align-items: center;
     }
-    .etapa-header button:hover {
-      background-color: #1565C0;
+    .etapa-header select {
+      padding: 5px;
+      font-size: 12px;
+      border-radius: 5px;
+      border: 1px solid #555555;
     }
     .etapa-details p {
       font-size: 14px;
       color: #555555;
+      margin: 15px 0;
+    }
+    .etapa-details .timer {
+      font-size: 14px;
+      color: #1976D2;
+      margin: 15px 0;
+    }
+    .etapa-details .overdue-warning {
+      font-size: 14px;
+      color: #D32F2F;
+      font-weight: bold;
       margin: 5px 0;
     }
   </style>
@@ -264,30 +294,38 @@
       </ul>
     </nav>
     <main>
-      <h2 id="plano-title">Etapas do Plano: Carregando...</h2>
+      <div class="title-container">
+        <h2 id="plano-title">Etapas do Plano: Carregando...</h2>
+        <button onclick="window.location.href='dashboard-gerenciador.html'">Retornar ao Dashboard</button>
+      </div>
       <div class="cards-container">
-        <div class="card plano-info">
-          <div class="plano-details">
-            <h3>Informações do Plano</h3>
-            <p><strong>Título:</strong> <span id="plano-titulo">Carregando...</span></p>
-            <p><strong>Descrição:</strong> <span id="plano-descricao">Carregando...</span></p>
+        <div class="card plano-details">
+          <h3>Detalhes do Plano</h3>
+          <div class="info-row">
             <p><strong>Área Responsável:</strong> <span id="plano-area">Carregando...</span></p>
             <p><strong>Data de Criação:</strong> <span id="plano-data">Carregando...</span></p>
+          </div>
+          <p class="spacer"><strong>Descrição do Incidente:</strong> <span id="plano-descricao">Carregando...</span></p>
+          <div class="info-row">
             <p><strong>Ativos Impactados:</strong> <span id="plano-ativos">Carregando...</span></p>
             <p><strong>Áreas Impactadas:</strong> <span id="plano-areas">Carregando...</span></p>
           </div>
-          <div class="plano-status">
-            <h3>Status do Plano</h3>
-            <span id="plano-urgencia" class="tag">Urgência: Carregando...</span>
-            <span id="plano-impacto" class="tag">Impacto: Carregando...</span>
-            <span id="plano-status" class="tag">Situação: Carregando...</span>
-          </div>
+        </div>
+        <div class="card plano-status">
+          <h3>Status do Plano</h3>
+          <span id="plano-urgencia" class="tag">Urgência: Carregando...</span>
+          <span id="plano-impacto" class="tag">Impacto: Carregando...</span>
+          <span id="plano-status" class="tag">Situação: Carregando...</span>
         </div>
       </div>
       <div class="card etapas">
         <div class="etapas-header">
           <h3>Etapas do Plano</h3>
-          <button onclick="openCreateEtapaModal()">Criar Nova Etapa</button>
+          <div class="button-group">
+            <button onclick="redirectToCreateEtapa()">Criar Nova Etapa</button>
+            <button onclick="selectEtapaForEdit()">Editar</button>
+            <button onclick="deleteEtapa()">Excluir</button>
+          </div>
         </div>
         <div id="etapas-list"></div>
       </div>
@@ -297,7 +335,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       const userInfo = document.getElementById('user-info');
       const planoTitle = document.getElementById('plano-title');
-      const planoTitulo = document.getElementById('plano-titulo');
       const planoDescricao = document.getElementById('plano-descricao');
       const planoArea = document.getElementById('plano-area');
       const planoData = document.getElementById('plano-data');
@@ -307,6 +344,8 @@
       const planoImpacto = document.getElementById('plano-impacto');
       const planoStatus = document.getElementById('plano-status');
       const etapasList = document.getElementById('etapas-list');
+      let selectedEtapaIndex = null;
+      let timers = {};
 
       // Carregar usuário logado
       const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
@@ -361,26 +400,78 @@
       }
 
       planoTitle.textContent = `Etapas do Plano: ${plano.titulo || 'Plano Sem Título'}`;
-      planoTitulo.textContent = plano.titulo || 'Plano Sem Título';
       planoDescricao.textContent = plano.descricao || 'Sem descrição';
       planoArea.textContent = plano.areaResponsavel || 'Não definido';
       planoData.textContent = plano.dataCriacao || 'Não definido';
       planoAtivos.textContent = plano.ativosImpactados ? plano.ativosImpactados.join(', ') : 'Não definido';
       planoAreas.textContent = plano.areasImpactadas ? plano.areasImpactadas.join(', ') : 'Não definido';
 
+      // Ajustar urgência e impacto para os valores especificados
       const rawUrgencia = plano.urgencia || 'Desconhecido';
       const rawImpacto = plano.impacto || 'Desconhecido';
-      const urgenciaClass = `urgencia-${normalizeClassName(rawUrgencia)}`;
-      const impactoClass = `impacto-${normalizeClassName(rawImpacto)}`;
+      const normalizedUrgencia = rawUrgencia.toLowerCase() === 'médio' ? 'média' : rawUrgencia.toLowerCase();
+      const normalizedImpacto = rawImpacto.toLowerCase() === 'médio' ? 'médio' : rawImpacto.toLowerCase();
+      const displayUrgencia = rawUrgencia.toLowerCase() === 'médio' ? 'Média' : rawUrgencia.charAt(0).toUpperCase() + rawUrgencia.slice(1).toLowerCase();
+      const displayImpacto = rawImpacto.toLowerCase() === 'médio' ? 'Médio' : rawImpacto.charAt(0).toUpperCase() + rawImpacto.slice(1).toLowerCase();
+      const urgenciaClass = `urgencia-${normalizeClassName(normalizedUrgencia)}`;
+      const impactoClass = `impacto-${normalizeClassName(normalizedImpacto)}`;
       const status = getPlanoStatus(plano.etapas);
       const statusClass = status;
 
-      planoUrgencia.textContent = `Urgência: ${rawUrgencia}`;
+      planoUrgencia.textContent = `Urgência: ${displayUrgencia}`;
       planoUrgencia.className = `tag ${urgenciaClass}`;
-      planoImpacto.textContent = `Impacto: ${rawImpacto}`;
+      planoImpacto.textContent = `Impacto: ${displayImpacto}`;
       planoImpacto.className = `tag ${impactoClass}`;
       planoStatus.textContent = `Situação: ${status === 'nao-iniciado' ? 'Não Iniciado' : status === 'em-andamento' ? 'Em Andamento' : 'Finalizado'}`;
       planoStatus.className = `tag ${statusClass}`;
+
+      // Formatar tempo para exibição (MM:SS)
+      const formatTime = (seconds) => {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      };
+
+      // Iniciar cronômetro para uma etapa
+      const startTimer = (etapaIndex) => {
+        if (timers[etapaIndex]) return; // Evitar múltiplos timers
+        const etapa = plano.etapas[etapaIndex];
+        if (!etapa.startTime) {
+          etapa.startTime = Date.now();
+          etapa.elapsedTime = etapa.elapsedTime || 0;
+        }
+        timers[etapaIndex] = setInterval(() => {
+          const elapsed = Math.floor((Date.now() - etapa.startTime) / 1000) + etapa.elapsedTime;
+          const timerElement = document.getElementById(`timer-${etapaIndex}`);
+          const overdueElement = document.getElementById(`overdue-${etapaIndex}`);
+          const duracaoMinutos = parseInt(etapa.duracao) || 0;
+          const duracaoSegundos = duracaoMinutos * 60;
+          if (timerElement) {
+            timerElement.textContent = `Tempo em Andamento: ${formatTime(elapsed)}`;
+          }
+          if (overdueElement) {
+            if (elapsed > duracaoSegundos) {
+              overdueElement.textContent = `Atenção: Duração recomendada de ${etapa.duracao} minutos ultrapassada!`;
+              overdueElement.style.display = 'block';
+            } else {
+              overdueElement.style.display = 'none';
+            }
+          }
+          etapa.currentElapsed = elapsed;
+        }, 1000);
+      };
+
+      // Parar cronômetro de uma etapa
+      const stopTimer = (etapaIndex) => {
+        if (timers[etapaIndex]) {
+          clearInterval(timers[etapaIndex]);
+          delete timers[etapaIndex];
+          const etapa = plano.etapas[etapaIndex];
+          etapa.elapsedTime = etapa.currentElapsed || 0;
+          etapa.startTime = null;
+          etapa.currentElapsed = 0;
+        }
+      };
 
       // Exibir etapas
       const displayEtapas = () => {
@@ -389,68 +480,163 @@
           etapasList.innerHTML = '<p>Nenhuma etapa cadastrada.</p>';
           return;
         }
+        // Limpar timers de etapas que não estão em andamento
+        Object.keys(timers).forEach(index => {
+          if (plano.etapas[index]?.status !== 'em-andamento') {
+            stopTimer(index);
+          }
+        });
         plano.etapas.forEach((etapa, index) => {
           const etapaItem = document.createElement('div');
           etapaItem.className = 'etapa-item';
+          const elapsedTime = etapa.status === 'em-andamento' && etapa.currentElapsed
+            ? etapa.currentElapsed
+            : (etapa.elapsedTime || 0);
+          const duracaoMinutos = parseInt(etapa.duracao) || 0;
+          const duracaoSegundos = duracaoMinutos * 60;
+          const isOverdue = elapsedTime > duracaoSegundos;
           etapaItem.innerHTML = `
             <div class="etapa-header">
-              <h4>${etapa.titulo || 'Etapa Sem Título'}</h4>
-              <button onclick="startEtapa(${index})" ${etapa.status === 'em-andamento' || etapa.status === 'concluida' ? 'disabled' : ''}>
-                ${etapa.status === 'em-andamento' ? 'Em Andamento' : etapa.status === 'concluida' ? 'Concluída' : 'Iniciar'}
-              </button>
+              <h4>${etapa.titulo || 'Etapa Sem Título'} (Posição: ${etapa.posicao}, Área: ${etapa.area})</h4>
+              <div class="etapa-actions">
+                <select onchange="changeEtapaStatus(${index}, this.value)">
+                  <option value="nao-iniciado" ${etapa.status === 'nao-iniciado' ? 'selected' : ''}>Não Iniciado</option>
+                  <option value="em-andamento" ${etapa.status === 'em-andamento' ? 'selected' : ''}>Em Andamento</option>
+                  <option value="concluida" ${etapa.status === 'concluida' ? 'selected' : ''}>Concluída</option>
+                </select>
+              </div>
             </div>
             <div class="etapa-details">
               <p><strong>Ação a ser realizada:</strong> ${etapa.acao || 'Não especificada'}</p>
-              <p><strong>Duração recomendada:</strong> ${etapa.duracao || 'Não especificada'}</p>
+              <p><strong>Duração recomendada:</strong> ${etapa.duracao || 'Não especificada'} minutos</p>
+              <p class="timer" id="timer-${index}">
+                ${etapa.status === 'em-andamento' ? `Tempo em Andamento: ${formatTime(elapsedTime)}` : `Tempo Total: ${formatTime(elapsedTime)}`}
+              </p>
+              <p class="overdue-warning" id="overdue-${index}" style="display: ${isOverdue ? 'block' : 'none'}">
+                ${isOverdue ? `Atenção: Duração recomendada de ${etapa.duracao} minutos ultrapassada!` : ''}
+              </p>
             </div>
           `;
+          // Iniciar cronômetro se a etapa estiver em andamento
+          if (etapa.status === 'em-andamento') {
+            startTimer(index);
+          }
+          // Adicionar evento de clique para seleção
+          etapaItem.addEventListener('click', () => {
+            selectedEtapaIndex = index;
+            document.querySelectorAll('.etapa-item').forEach(item => item.style.backgroundColor = '');
+            etapaItem.style.backgroundColor = '#E0E0E0';
+          });
           etapasList.appendChild(etapaItem);
         });
       };
 
-      // Iniciar etapa
-      const startEtapa = (etapaIndex) => {
-        plano.etapas[etapaIndex].status = 'em-andamento';
+      // Alterar status da etapa
+      const changeEtapaStatus = (etapaIndex, newStatus) => {
+        const etapa = plano.etapas[etapaIndex];
+        const oldStatus = etapa.status;
+
+        // Atualizar status
+        etapa.status = newStatus;
+
+        // Gerenciar cronômetro
+        if (newStatus === 'em-andamento' && oldStatus !== 'em-andamento') {
+          startTimer(etapaIndex);
+        } else if (newStatus !== 'em-andamento' && oldStatus === 'em-andamento') {
+          stopTimer(etapaIndex);
+          // Se a etapa foi encerrada (concluída), iniciar a próxima etapa
+          if (newStatus === 'concluida' && etapaIndex + 1 < plano.etapas.length) {
+            const nextEtapa = plano.etapas[etapaIndex + 1];
+            if (nextEtapa.status === 'nao-iniciado') {
+              nextEtapa.status = 'em-andamento';
+              startTimer(etapaIndex + 1);
+            }
+          }
+        }
+
+        // Zerar cronômetro ao mudar para "não iniciado"
+        if (newStatus === 'nao-iniciado' && (oldStatus === 'em-andamento' || oldStatus === 'concluida')) {
+          etapa.elapsedTime = 0;
+          etapa.currentElapsed = 0;
+          etapa.startTime = null;
+          stopTimer(etapaIndex);
+        }
+
+        // Atualizar plano no localStorage
         planos[planoId] = plano;
         localStorage.setItem('planos', JSON.stringify(planos));
         displayEtapas();
-        // Atualizar status do plano
         const status = getPlanoStatus(plano.etapas);
         planoStatus.textContent = `Situação: ${status === 'nao-iniciado' ? 'Não Iniciado' : status === 'em-andamento' ? 'Em Andamento' : 'Finalizado'}`;
         planoStatus.className = `tag ${status}`;
       };
 
-      // Abrir modal para criar nova etapa (simulado com prompt por simplicidade)
-      const openCreateEtapaModal = () => {
-        const titulo = prompt('Digite o título da etapa:');
-        if (!titulo) return;
-        const acao = prompt('Digite a ação a ser realizada:');
-        if (!acao) return;
-        const duracao = prompt('Digite a duração recomendada (ex.: 5 dias):');
-        if (!duracao) return;
+      // Função para redirecionar para criar-etapa-plano.html
+      const redirectToCreateEtapa = () => {
+        console.log('Iniciando redirectToCreateEtapa...');
+        const urlParams = new URLSearchParams(window.location.search);
+        console.log('URL atual:', window.location.href);
+        console.log('Parâmetros da URL:', urlParams.toString());
+        const currentPlanoId = parseInt(urlParams.get('planoId'));
+        console.log('planoId obtido:', currentPlanoId);
+        if (!isNaN(currentPlanoId)) {
+          const planos = loadPlanos();
+          console.log('Planos carregados do localStorage:', planos);
+          if (planos[currentPlanoId]) {
+            console.log('Plano encontrado, redirecionando para criar-etapa-plano.html...');
+            window.location.href = `criar-etapa-plano.html?planoId=${currentPlanoId}`;
+          } else {
+            console.log('Plano não encontrado no localStorage para planoId:', currentPlanoId);
+            alert('Erro: Plano não encontrado no armazenamento.');
+            window.location.href = 'dashboard-gerenciador.html';
+          }
+        } else {
+          console.log('planoId inválido ou não encontrado na URL');
+          alert('Erro: ID do plano não encontrado na URL.');
+          window.location.href = 'dashboard-gerenciador.html';
+        }
+      };
 
-        if (!plano.etapas) plano.etapas = [];
-        plano.etapas.push({
-          titulo,
-          acao,
-          duracao,
-          status: 'nao-iniciado'
-        });
-        planos[planoId] = plano;
-        localStorage.setItem('planos', JSON.stringify(planos));
-        displayEtapas();
-        // Atualizar status do plano
-        const status = getPlanoStatus(plano.etapas);
-        planoStatus.textContent = `Situação: ${status === 'nao-iniciado' ? 'Não Iniciado' : status === 'em-andamento' ? 'Em Andamento' : 'Finalizado'}`;
-        planoStatus.className = `tag ${status}`;
+      // Função para redirecionar para editar etapa
+      const selectEtapaForEdit = () => {
+        if (selectedEtapaIndex === null) {
+          alert('Por favor, selecione uma etapa para editar.');
+          return;
+        }
+        window.location.href = `editar-etapa-plano.html?planoId=${planoId}&etapaIndex=${selectedEtapaIndex}`;
+      };
+
+      // Função para excluir etapa
+      const deleteEtapa = () => {
+        if (selectedEtapaIndex === null) {
+          alert('Por favor, selecione uma etapa para excluir.');
+          return;
+        }
+        if (confirm('Tem certeza que deseja excluir esta etapa?')) {
+          stopTimer(selectedEtapaIndex);
+          plano.etapas.splice(selectedEtapaIndex, 1);
+          // Reajustar posições
+          plano.etapas.forEach((etapa, index) => {
+            etapa.posicao = index + 1;
+          });
+          planos[planoId] = plano;
+          localStorage.setItem('planos', JSON.stringify(planos));
+          selectedEtapaIndex = null;
+          displayEtapas();
+          const status = getPlanoStatus(plano.etapas);
+          planoStatus.textContent = `Situação: ${status === 'nao-iniciado' ? 'Não Iniciado' : status === 'em-andamento' ? 'Em Andamento' : 'Finalizado'}`;
+          planoStatus.className = `tag ${status}`;
+        }
       };
 
       // Inicializar página
       displayEtapas();
 
       // Expor funções ao escopo global
-      window.startEtapa = startEtapa;
-      window.openCreateEtapaModal = openCreateEtapaModal;
+      window.changeEtapaStatus = changeEtapaStatus;
+      window.redirectToCreateEtapa = redirectToCreateEtapa;
+      window.selectEtapaForEdit = selectEtapaForEdit;
+      window.deleteEtapa = deleteEtapa;
     });
   </script>
 </body>
