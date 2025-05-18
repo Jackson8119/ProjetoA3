@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       message.style.display = 'none';
     }
-    planos.forEach(plano => {
+    planos.forEach((plano, index) => {
       const status = plano.etapas && plano.etapas.length > 0 ? plano.etapas[plano.etapas.length - 1].status : 'Não Iniciado';
       const rawUrgencia = plano.urgencia || 'Desconhecido';
       const rawImpacto = plano.impacto || 'Desconhecido';
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span class="tag ${urgenciaClass}">Urgência: ${rawUrgencia}</span>
             <span class="tag ${impactoClass}">Impacto: ${rawImpacto}</span>
           </div>
-          <button onclick="viewDetalhes('${plano.id}')">Ver Detalhes</button>
+          <button onclick="viewDetalhes('${plano.id}', ${index})">Ver Detalhes</button>
         </div>
       `;
       console.log('HTML gerado do plano-right:', rightHTML);
@@ -130,8 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Função para ver detalhes
-  const viewDetalhes = (id) => {
-    window.location.href = `detalhes-plano.html?id=${id}`;
+  const viewDetalhes = (id, index) => {
+    console.log(`Redirecionando para criar-etapa.html com planoId=${index}`);
+    window.location.href = `criar-etapa.html?planoId=${index}`;
   };
 
   // Inicializar listagem

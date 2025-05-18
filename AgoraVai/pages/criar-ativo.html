@@ -214,7 +214,6 @@
     <nav class="sidebar">
       <ul>
         <li><a href="dashboard-gerenciador.html">📋 Planos de Ação</a></li>
-        <li><a href="criar-etapa.html">📑 Etapas</a></li>
         <li><a href="criar-ativo.html" class="active">🛠️ Ativos</a></li>
         <li><a href="criar-area.html">📂 Áreas</a></li>
         <li><a href="login.html">🚪 Sair</a></li>
@@ -260,6 +259,7 @@
       const ativosList = document.getElementById('ativos-list');
       const areaSelect = document.getElementById('ativo-area');
 
+      // Carregar usuário logado
       const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
       if (loggedUser && loggedUser.tipo === 'Gerenciador') {
         userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
@@ -285,8 +285,8 @@
         areaSelect.innerHTML = '<option value="" disabled selected>Selecione uma área</option>';
         areas.forEach(area => {
           const option = document.createElement('option');
-          option.value = area;
-          option.textContent = area;
+          option.value = area; // Usando diretamente o valor da string
+          option.textContent = area; // Usando diretamente o valor da string
           areaSelect.appendChild(option);
         });
       };

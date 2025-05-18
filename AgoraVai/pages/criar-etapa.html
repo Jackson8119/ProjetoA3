@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etapas do Plano - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #000000;
+      min-height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #D32F2F;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .alert-icon {
+      font-size: 40px;
+      color: #FFFF00;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 700;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-right span#user-info {
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+    .navbar-right .user-role {
+      background-color: #FF5252;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+    .container {
+      display: flex;
+      margin-top: 100px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444444;
+      padding: 20px;
+      position: fixed;
+      height: calc(100vh - 100px);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: #FFA500;
+    }
+    main {
+      flex: 1;
+      margin-left: 220px;
+      padding: 30px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .cards-container {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background-color: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .card.plano-info {
+      flex: 1;
+      display: flex;
+      gap: 20px;
+    }
+    .plano-details, .plano-status {
+      flex: 1;
+    }
+    .plano-details h3, .plano-status h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+    .plano-details p {
+      font-size: 14px;
+      color: #555555;
+      margin: 5px 0;
+    }
+    .plano-status .tag {
+      display: block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .plano-status .tag[class*="urgencia-"],
+    .plano-status .tag[class*="impacto-"] {
+      background-color: transparent;
+    }
+    .plano-status .tag.urgencia-baixa {
+      background-color: #4CAF50 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-status .tag.urgencia-media {
+      background-color: #FFCA28 !important;
+      color: #000000 !important;
+    }
+    .plano-status .tag.urgencia-alta {
+      background-color: #D32F2F !important;
+      color: #FFFFFF !important;
+    }
+    .plano-status .tag.impacto-baixo {
+      background-color: #4CAF50 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-status .tag.impacto-medio {
+      background-color: #FFCA28 !important;
+      color: #000000 !important;
+    }
+    .plano-status .tag.impacto-alto {
+      background-color: #D32F2F !important;
+      color: #FFFFFF !important;
+    }
+    .plano-status .tag.urgencia-desconhecido,
+    .plano-status .tag.impacto-desconhecido {
+      background-color: #999999 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-status .tag.nao-iniciado {
+      background-color: #B0BEC5;
+      color: #000000;
+    }
+    .plano-status .tag.em-andamento {
+      background-color: #FFCA28;
+      color: #000000;
+    }
+    .plano-status .tag.finalizado {
+      background-color: #4CAF50;
+      color: #FFFFFF;
+    }
+    .card.etapas {
+      width: 100%;
+    }
+    .etapas-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .etapas-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .etapas-header button {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .etapas-header button:hover {
+      background-color: #A52A2A;
+    }
+    .etapa-item {
+      border-bottom: 1px solid #E0E0E0;
+      padding: 10px 0;
+      margin-bottom: 10px;
+    }
+    .etapa-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .etapa-header h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0;
+    }
+    .etapa-header button {
+      background-color: #1976D2;
+      color: #FFFFFF;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .etapa-header button:hover {
+      background-color: #1565C0;
+    }
+    .etapa-details p {
+      font-size: 14px;
+      color: #555555;
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="alert-icon">⚠</span>
+        <h1>Sistema de Gestão de Riscos</h1>
+      </div>
+      <div class="navbar-right">
+        <span id="user-info"></span>
+        <span class="user-role">Gerenciador</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="dashboard-gerenciador.html">📋 Planos de Ação</a></li>
+        <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
+        <li><a href="criar-area.html">📂 Áreas</a></li>
+        <li><a href="login.html">🚪 Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2 id="plano-title">Etapas do Plano: Carregando...</h2>
+      <div class="cards-container">
+        <div class="card plano-info">
+          <div class="plano-details">
+            <h3>Informações do Plano</h3>
+            <p><strong>Título:</strong> <span id="plano-titulo">Carregando...</span></p>
+            <p><strong>Descrição:</strong> <span id="plano-descricao">Carregando...</span></p>
+            <p><strong>Área Responsável:</strong> <span id="plano-area">Carregando...</span></p>
+            <p><strong>Data de Criação:</strong> <span id="plano-data">Carregando...</span></p>
+            <p><strong>Ativos Impactados:</strong> <span id="plano-ativos">Carregando...</span></p>
+            <p><strong>Áreas Impactadas:</strong> <span id="plano-areas">Carregando...</span></p>
+          </div>
+          <div class="plano-status">
+            <h3>Status do Plano</h3>
+            <span id="plano-urgencia" class="tag">Urgência: Carregando...</span>
+            <span id="plano-impacto" class="tag">Impacto: Carregando...</span>
+            <span id="plano-status" class="tag">Situação: Carregando...</span>
+          </div>
+        </div>
+      </div>
+      <div class="card etapas">
+        <div class="etapas-header">
+          <h3>Etapas do Plano</h3>
+          <button onclick="openCreateEtapaModal()">Criar Nova Etapa</button>
+        </div>
+        <div id="etapas-list"></div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = document.getElementById('user-info');
+      const planoTitle = document.getElementById('plano-title');
+      const planoTitulo = document.getElementById('plano-titulo');
+      const planoDescricao = document.getElementById('plano-descricao');
+      const planoArea = document.getElementById('plano-area');
+      const planoData = document.getElementById('plano-data');
+      const planoAtivos = document.getElementById('plano-ativos');
+      const planoAreas = document.getElementById('plano-areas');
+      const planoUrgencia = document.getElementById('plano-urgencia');
+      const planoImpacto = document.getElementById('plano-impacto');
+      const planoStatus = document.getElementById('plano-status');
+      const etapasList = document.getElementById('etapas-list');
+
+      // Carregar usuário logado
+      const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+      if (loggedUser && loggedUser.tipo === 'Gerenciador') {
+        userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
+      } else {
+        window.location.href = 'login.html';
+      }
+
+      // Carregar planoId da URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const planoId = parseInt(urlParams.get('planoId'));
+      if (isNaN(planoId)) {
+        alert('Plano não encontrado.');
+        window.location.href = 'dashboard-gerenciador.html';
+        return;
+      }
+
+      // Carregar planos do localStorage
+      const loadPlanos = () => {
+        const planos = localStorage.getItem('planos');
+        return planos ? JSON.parse(planos) : [];
+      };
+
+      // Normalizar texto para classes CSS
+      const normalizeClassName = (text) => {
+        return text
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]/g, '')
+          .trim();
+      };
+
+      // Determinar status do plano
+      const getPlanoStatus = (etapas) => {
+        if (!etapas || etapas.length === 0) return 'nao-iniciado';
+        const hasEmAndamento = etapas.some(etapa => etapa.status === 'em-andamento');
+        const allConcluidas = etapas.every(etapa => etapa.status === 'concluida');
+        if (allConcluidas) return 'finalizado';
+        if (hasEmAndamento) return 'em-andamento';
+        return 'nao-iniciado';
+      };
+
+      // Carregar e exibir informações do plano
+      const planos = loadPlanos();
+      const plano = planos[planoId];
+      if (!plano) {
+        alert('Plano não encontrado.');
+        window.location.href = 'dashboard-gerenciador.html';
+        return;
+      }
+
+      planoTitle.textContent = `Etapas do Plano: ${plano.titulo || 'Plano Sem Título'}`;
+      planoTitulo.textContent = plano.titulo || 'Plano Sem Título';
+      planoDescricao.textContent = plano.descricao || 'Sem descrição';
+      planoArea.textContent = plano.areaResponsavel || 'Não definido';
+      planoData.textContent = plano.dataCriacao || 'Não definido';
+      planoAtivos.textContent = plano.ativosImpactados ? plano.ativosImpactados.join(', ') : 'Não definido';
+      planoAreas.textContent = plano.areasImpactadas ? plano.areasImpactadas.join(', ') : 'Não definido';
+
+      const rawUrgencia = plano.urgencia || 'Desconhecido';
+      const rawImpacto = plano.impacto || 'Desconhecido';
+      const urgenciaClass = `urgencia-${normalizeClassName(rawUrgencia)}`;
+      const impactoClass = `impacto-${normalizeClassName(rawImpacto)}`;
+      const status = getPlanoStatus(plano.etapas);
+      const statusClass = status;
+
+      planoUrgencia.textContent = `Urgência: ${rawUrgencia}`;
+      planoUrgencia.className = `tag ${urgenciaClass}`;
+      planoImpacto.textContent = `Impacto: ${rawImpacto}`;
+      planoImpacto.className = `tag ${impactoClass}`;
+      planoStatus.textContent = `Situação: ${status === 'nao-iniciado' ? 'Não Iniciado' : status === 'em-andamento' ? 'Em Andamento' : 'Finalizado'}`;
+      planoStatus.className = `tag ${statusClass}`;
+
+      // Exibir etapas
+      const displayEtapas = () => {
+        etapasList.innerHTML = '';
+        if (!plano.etapas || plano.etapas.length === 0) {
+          etapasList.innerHTML = '<p>Nenhuma etapa cadastrada.</p>';
+          return;
+        }
+        plano.etapas.forEach((etapa, index) => {
+          const etapaItem = document.createElement('div');
+          etapaItem.className = 'etapa-item';
+          etapaItem.innerHTML = `
+            <div class="etapa-header">
+              <h4>${etapa.titulo || 'Etapa Sem Título'}</h4>
+              <button onclick="startEtapa(${index})" ${etapa.status === 'em-andamento' || etapa.status === 'concluida' ? 'disabled' : ''}>
+                ${etapa.status === 'em-andamento' ? 'Em Andamento' : etapa.status === 'concluida' ? 'Concluída' : 'Iniciar'}
+              </button>
+            </div>
+            <div class="etapa-details">
+              <p><strong>Ação a ser realizada:</strong> ${etapa.acao || 'Não especificada'}</p>
+              <p><strong>Duração recomendada:</strong> ${etapa.duracao || 'Não especificada'}</p>
+            </div>
+          `;
+          etapasList.appendChild(etapaItem);
+        });
+      };
+
+      // Iniciar etapa
+      const startEtapa = (etapaIndex) => {
+        plano.etapas[etapaIndex].status = 'em-andamento';
+        planos[planoId] = plano;
+        localStorage.setItem('planos', JSON.stringify(planos));
+        displayEtapas();
+        // Atualizar status do plano
+        const status = getPlanoStatus(plano.etapas);
+        planoStatus.textContent = `Situação: ${status === 'nao-iniciado' ? 'Não Iniciado' : status === 'em-andamento' ? 'Em Andamento' : 'Finalizado'}`;
+        planoStatus.className = `tag ${status}`;
+      };
+
+      // Abrir modal para criar nova etapa (simulado com prompt por simplicidade)
+      const openCreateEtapaModal = () => {
+        const titulo = prompt('Digite o título da etapa:');
+        if (!titulo) return;
+        const acao = prompt('Digite a ação a ser realizada:');
+        if (!acao) return;
+        const duracao = prompt('Digite a duração recomendada (ex.: 5 dias):');
+        if (!duracao) return;
+
+        if (!plano.etapas) plano.etapas = [];
+        plano.etapas.push({
+          titulo,
+          acao,
+          duracao,
+          status: 'nao-iniciado'
+        });
+        planos[planoId] = plano;
+        localStorage.setItem('planos', JSON.stringify(planos));
+        displayEtapas();
+        // Atualizar status do plano
+        const status = getPlanoStatus(plano.etapas);
+        planoStatus.textContent = `Situação: ${status === 'nao-iniciado' ? 'Não Iniciado' : status === 'em-andamento' ? 'Em Andamento' : 'Finalizado'}`;
+        planoStatus.className = `tag ${status}`;
+      };
+
+      // Inicializar página
+      displayEtapas();
+
+      // Expor funções ao escopo global
+      window.startEtapa = startEtapa;
+      window.openCreateEtapaModal = openCreateEtapaModal;
+    });
+  </script>
+</body>
+</html>

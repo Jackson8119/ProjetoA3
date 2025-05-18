@@ -209,7 +209,6 @@
     <nav class="sidebar">
       <ul>
         <li><a href="dashboard-gerenciador.html">📋 Planos de Ação</a></li>
-        <li><a href="criar-etapa.html">📑 Etapas</a></li>
         <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
         <li><a href="criar-area.html" class="active">📂 Áreas</a></li>
         <li><a href="login.html">🚪 Sair</a></li>
@@ -260,6 +259,18 @@
         return areas ? JSON.parse(areas) : [];
       };
 
+      // Carregar ativos do localStorage
+      const loadAtivos = () => {
+        const ativos = localStorage.getItem('ativos');
+        return ativos ? JSON.parse(ativos) : [];
+      };
+
+      // Verificar se a área está vinculada a algum ativo
+      const isAreaLinkedToAtivo = (area) => {
+        const ativos = loadAtivos();
+        return ativos.some(ativo => ativo.area === area);
+      };
+
       // Exibir lista de áreas
       const displayAreas = () => {
         const areas = loadAreas();
@@ -283,7 +294,17 @@
           document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
               const index = parseInt(e.target.getAttribute('data-index'));
-              if (confirm(`Deseja excluir a área "${areas[index]}"?`)) {
+              const areaToDelete = areas[index];
+              if (isAreaLinkedToAtivo(areaToDelete)) {
+                message.textContent = `Erro: Não é possível excluir a área "${areaToDelete}" porque ela está vinculada a um ativo.`;
+                message.className = 'message error';
+                message.style.display = 'block';
+                setTimeout(() => {
+                  message.style.display = 'none';
+                }, 2000);
+                return;
+              }
+              if (confirm(`Deseja excluir a área "${areaToDelete}"?`)) {
                 areas.splice(index, 1);
                 localStorage.setItem('areas', JSON.stringify(areas));
                 displayAreas();
