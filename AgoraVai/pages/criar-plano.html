@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar Plano de Ação - Sistema de Gestão de Riscos</title>
+  <title>Criar Plano de Ação</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -98,13 +98,6 @@
       font-weight: 700;
       margin: 0 0 20px;
     }
-    .form-container {
-      background-color: #FFFFFF;
-      border: 1px solid #E0E0E0;
-      border-radius: 5px;
-      padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
     .form-group {
       margin-bottom: 15px;
     }
@@ -114,7 +107,7 @@
       font-weight: 700;
       margin-bottom: 5px;
     }
-    .form-group input[type="text"],
+    .form-group input,
     .form-group textarea,
     .form-group select {
       width: 100%;
@@ -128,36 +121,38 @@
       height: 100px;
       resize: vertical;
     }
-    .form-group select[multiple] {
-      height: 120px;
+    .form-group input[type="text"][readonly] {
+      background-color: #E0E0E0;
     }
-    .form-actions {
+    .form-group .info-text {
+      font-size: 14px;
+      color: #555555;
+      margin-top: 5px;
+    }
+    .form-buttons {
       display: flex;
-      justify-content: flex-end;
       gap: 10px;
-      margin-top: 20px;
     }
-    .form-actions button {
+    .form-buttons button {
       padding: 10px 20px;
-      border-radius: 5px;
       font-size: 16px;
-      cursor: pointer;
       border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
-    .form-actions button.save {
+    .form-buttons .save-btn {
+      background-color: #4CAF50;
+      color: #FFFFFF;
+    }
+    .form-buttons .save-btn:hover {
+      background-color: #388E3C;
+    }
+    .form-buttons .cancel-btn {
       background-color: #D32F2F;
       color: #FFFFFF;
-      border: 1px solid #FFFFFF;
     }
-    .form-actions button.save:hover {
+    .form-buttons .cancel-btn:hover {
       background-color: #A52A2A;
-    }
-    .form-actions button.cancel {
-      background-color: #B0BEC5;
-      color: #000000;
-    }
-    .form-actions button.cancel:hover {
-      background-color: #90A4AE;
     }
     .message {
       font-size: 14px;
@@ -197,66 +192,65 @@
       </ul>
     </nav>
     <main>
-      <h2>Criar Novo Plano de Ação</h2>
-      <div class="form-container">
+      <h2>Criar Plano de Ação</h2>
+      <form id="plano-form">
         <div class="form-group">
-          <label for="titulo">Título</label>
-          <input type="text" id="titulo" placeholder="Digite o título do plano" required>
+          <label for="titulo">Título:</label>
+          <input type="text" id="titulo" name="titulo" required>
         </div>
         <div class="form-group">
-          <label for="descricao">Descrição</label>
-          <textarea id="descricao" placeholder="Descreva o plano de ação" required></textarea>
+          <label for="descricao">Descrição:</label>
+          <textarea id="descricao" name="descricao" required></textarea>
         </div>
         <div class="form-group">
-          <label for="area-responsavel">Área Responsável</label>
-          <input type="text" id="area-responsavel" placeholder="Ex.: TI" required>
+          <label for="dataCriacao">Data de Criação:</label>
+          <input type="text" id="dataCriacao" name="dataCriacao" readonly>
         </div>
         <div class="form-group">
-          <label for="ativos-impactados">Ativos Impactados</label>
-          <select id="ativos-impactados" multiple>
-            <option value="Servidor A">Servidor A</option>
-            <option value="Servidor B">Servidor B</option>
-            <option value="Máquina X">Máquina X</option>
-          </select>
+          <label for="areaResponsavel">Área Responsável:</label>
+          <input type="text" id="areaResponsavel" name="areaResponsavel" required>
         </div>
         <div class="form-group">
-          <label for="areas-impactadas">Áreas Impactadas</label>
-          <select id="areas-impactadas" multiple>
-            <option value="TI">TI</option>
-            <option value="Produção">Produção</option>
-            <option value="Financeiro">Financeiro</option>
-          </select>
+          <label for="ativosImpactados">Ativos Impactados:</label>
+          <input type="text" id="ativosImpactados" name="ativosImpactados">
+          <p class="info-text">Digite os valores separados por vírgula (ex.: Servidor A, Servidor B)</p>
         </div>
         <div class="form-group">
-          <label for="urgencia">Urgência</label>
-          <select id="urgencia" required>
+          <label for="areasImpactadas">Áreas Impactadas:</label>
+          <input type="text" id="areasImpactadas" name="areasImpactadas">
+          <p class="info-text">Digite os valores separados por vírgula (ex.: TI, Produção)</p>
+        </div>
+        <div class="form-group">
+          <label for="urgencia">Urgência:</label>
+          <select id="urgencia" name="urgencia" required>
             <option value="Baixa">Baixa</option>
             <option value="Média">Média</option>
             <option value="Alta">Alta</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="impacto">Impacto</label>
-          <select id="impacto" required>
+          <label for="impacto">Impacto:</label>
+          <select id="impacto" name="impacto" required>
             <option value="Baixo">Baixo</option>
             <option value="Médio">Médio</option>
             <option value="Alto">Alto</option>
           </select>
         </div>
-        <div class="form-actions">
-          <button class="cancel" onclick="window.location.href='dashboard-gerenciador.html'">Cancelar</button>
-          <button class="save" onclick="salvarPlano()">Salvar</button>
+        <div class="form-buttons">
+          <button type="submit" class="save-btn">Salvar</button>
+          <button type="button" class="cancel-btn" onclick="window.location.href='dashboard-gerenciador.html'">Cancelar</button>
         </div>
-      </div>
+      </form>
       <p id="message" class="message"></p>
     </main>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const userInfo = document.getElementById('user-info');
+      const form = document.getElementById('plano-form');
       const message = document.getElementById('message');
+      const dataCriacao = document.getElementById('dataCriacao');
 
-      // Carregar usuário logado
       const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
       if (loggedUser && loggedUser.tipo === 'Gerenciador') {
         userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
@@ -264,33 +258,90 @@
         window.location.href = 'login.html';
       }
 
-      // Função para salvar o plano
-      window.salvarPlano = () => {
+      // Inicializar áreas e ativos, se não existirem
+      if (!localStorage.getItem('areas')) {
+        const initialAreas = ['TI', 'Produção', 'RH'];
+        localStorage.setItem('areas', JSON.stringify(initialAreas));
+        console.log('Áreas inicializadas:', initialAreas);
+      }
+      if (!localStorage.getItem('ativos')) {
+        const initialAtivos = ['Servidor A', 'Servidor B', 'Sistema X'];
+        localStorage.setItem('ativos', JSON.stringify(initialAtivos));
+        console.log('Ativos inicializados:', initialAtivos);
+      }
+
+      // Função para carregar áreas do localStorage
+      const loadAreas = () => {
+        const areas = localStorage.getItem('areas');
+        return areas ? JSON.parse(areas) : [];
+      };
+
+      // Função para carregar ativos do localStorage
+      const loadAtivos = () => {
+        const ativos = localStorage.getItem('ativos');
+        return ativos ? JSON.parse(ativos) : [];
+      };
+
+      // Preencher data de criação
+      const today = new Date();
+      dataCriacao.value = today.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+      // Manipular envio do formulário
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
         const titulo = document.getElementById('titulo').value.trim();
         const descricao = document.getElementById('descricao').value.trim();
-        const areaResponsavel = document.getElementById('area-responsavel').value.trim();
-        const ativosImpactados = Array.from(document.getElementById('ativos-impactados').selectedOptions).map(opt => opt.value);
-        const areasImpactadas = Array.from(document.getElementById('areas-impactadas').selectedOptions).map(opt => opt.value);
+        const dataCriacao = document.getElementById('dataCriacao').value;
+        const areaResponsavel = document.getElementById('areaResponsavel').value.trim();
+        const ativosImpactadosInput = document.getElementById('ativosImpactados').value.trim();
+        const areasImpactadasInput = document.getElementById('areasImpactadas').value.trim();
         const urgencia = document.getElementById('urgencia').value;
         const impacto = document.getElementById('impacto').value;
 
-        // Validação
-        if (!titulo || !descricao || !areaResponsavel || ativosImpactados.length === 0 || areasImpactadas.length === 0) {
-          message.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+        // Validar área responsável
+        const existingAreas = loadAreas();
+        if (!existingAreas.includes(areaResponsavel)) {
+          message.textContent = `Erro: A área responsável "${areaResponsavel}" não existe. Crie a área primeiro em "Criar Área". Áreas disponíveis: ${existingAreas.join(', ')}.`;
           message.className = 'message error';
           message.style.display = 'block';
           return;
         }
 
+        // Processar e validar ativos impactados
+        let ativosImpactados = [];
+        if (ativosImpactadosInput) {
+          ativosImpactados = ativosImpactadosInput.split(',').map(item => item.trim()).filter(item => item);
+          const existingAtivos = loadAtivos();
+          const invalidAtivos = ativosImpactados.filter(ativo => !existingAtivos.includes(ativo));
+          if (invalidAtivos.length > 0) {
+            message.textContent = `Erro: Os seguintes ativos não existem: ${invalidAtivos.join(', ')}. Crie os ativos primeiro em "Criar Ativo". Ativos disponíveis: ${existingAtivos.join(', ')}.`;
+            message.className = 'message error';
+            message.style.display = 'block';
+            return;
+          }
+        }
+
+        // Processar e validar áreas impactadas
+        let areasImpactadas = [];
+        if (areasImpactadasInput) {
+          areasImpactadas = areasImpactadasInput.split(',').map(item => item.trim()).filter(item => item);
+          const invalidAreas = areasImpactadas.filter(area => !existingAreas.includes(area));
+          if (invalidAreas.length > 0) {
+            message.textContent = `Erro: As seguintes áreas não existem: ${invalidAreas.join(', ')}. Crie as áreas primeiro em "Criar Área". Áreas disponíveis: ${existingAreas.join(', ')}.`;
+            message.className = 'message error';
+            message.style.display = 'block';
+            return;
+          }
+        }
+
         // Carregar planos existentes
         const planos = JSON.parse(localStorage.getItem('planos') || '[]');
-        
-        // Criar novo plano
-        const novoPlano = {
+        const newPlano = {
           id: (planos.length + 1).toString(),
           titulo,
           descricao,
-          dataCriacao: new Date().toLocaleDateString('pt-BR'), // Ex.: "17/05/2025"
+          dataCriacao,
           areaResponsavel,
           ativosImpactados,
           areasImpactadas,
@@ -299,18 +350,18 @@
           etapas: []
         };
 
-        // Adicionar ao localStorage
-        planos.push(novoPlano);
+        // Salvar novo plano
+        planos.push(newPlano);
         localStorage.setItem('planos', JSON.stringify(planos));
-
-        // Exibir mensagem de sucesso e redirecionar
-        message.textContent = 'Plano criado com sucesso!';
+        message.textContent = 'Plano de ação criado com sucesso!';
         message.className = 'message success';
         message.style.display = 'block';
+
+        // Redirecionar após 1 segundo
         setTimeout(() => {
           window.location.href = 'dashboard-gerenciador.html';
         }, 1000);
-      };
+      });
     });
   </script>
 </body>
