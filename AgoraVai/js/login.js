@@ -58,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('loggedUser', JSON.stringify(user));
       if (user.tipo === 'Gerenciador') {
         window.location.href = 'dashboard-gerenciador.html';
+      } else if (user.tipo === 'Operador') {
+        window.location.href = 'dashboard-operador.html';
       } else {
         errorMessage.textContent = 'Dashboard não implementado para este tipo de usuário.';
         errorMessage.style.display = 'block';

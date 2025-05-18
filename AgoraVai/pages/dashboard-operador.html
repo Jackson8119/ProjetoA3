@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Operador - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #000000;
+      min-height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #D32F2F;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .alert-icon {
+      font-size: 40px;
+      color: #FFFF00;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 700;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-right span#user-info {
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+    .navbar-right .user-role {
+      background-color: #FF5252;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+    .container {
+      display: flex;
+      margin-top: 100px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444444;
+      padding: 20px;
+      position: fixed;
+      height: calc(100vh - 100px);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: #FFA500;
+    }
+    main {
+      flex: 1;
+      margin-left: 220px;
+      padding: 30px;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .search-bar {
+      position: relative;
+      width: 300px;
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: #000000;
+    }
+    #search-input {
+      width: 100%;
+      padding: 10px 10px 10px 35px;
+      font-size: 16px;
+      border: 1px solid #555555;
+      border-radius: 5px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .plano-card {
+      background-color: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+    }
+    .plano-left {
+      width: 70%;
+    }
+    .plano-left h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+    .plano-left p.description {
+      font-size: 16px;
+      font-weight: 700;
+      color: #555555;
+      margin: 5px 0;
+    }
+    .plano-left p:not(.description) {
+      font-size: 14px;
+      color: #555555;
+      margin: 5px 0;
+    }
+    .plano-left .tag {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .plano-right {
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .plano-right .tags {
+      width: 100%;
+      min-height: 60px;
+      margin-bottom: 10px;
+    }
+    .plano-right .tag {
+      display: block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-align: center;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 10;
+      position: relative;
+      opacity: 1;
+      visibility: visible;
+      background-color: #CCCCCC; /* Fallback para depuração */
+      color: #000000;
+    }
+    .plano-right .tag[class*="urgencia-"],
+    .plano-right .tag[class*="impacto-"] {
+      background-color: transparent; /* Evita fundo padrão */
+    }
+    .plano-right .tag.urgencia-baixa {
+      background-color: #4CAF50 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.urgencia-media {
+      background-color: #FFCA28 !important;
+      color: #000000 !important;
+    }
+    .plano-right .tag.urgencia-alta {
+      background-color: #D32F2F !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.impacto-baixo {
+      background-color: #4CAF50 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.impacto-medio {
+      background-color: #FFCA28 !important;
+      color: #000000 !important;
+    }
+    .plano-right .tag.impacto-alto {
+      background-color: #D32F2F !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.urgencia-desconhecido,
+    .plano-right .tag.impacto-desconhecido {
+      background-color: #999999 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .action-buttons {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: flex-end;
+    }
+    .plano-right .action-buttons button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      flex: 1;
+    }
+    .plano-right .action-buttons .etapas-btn {
+      background-color: #1976D2;
+      color: #FFFFFF;
+    }
+    .plano-right .action-buttons .etapas-btn:hover {
+      background-color: #1565C0;
+    }
+    .message {
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+    }
+    .message.error {
+      color: #D32F2F;
+    }
+    .message.success {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="alert-icon">⚠</span>
+        <h1>Sistema de Gestão de Riscos</h1>
+      </div>
+      <div class="navbar-right">
+        <span id="user-info"></span>
+        <span class="user-role">Operador</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="dashboard-operador.html" class="active">📋 Planos de Ação</a></li>
+        <li><a href="login.html">🚪 Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <div class="header-bar">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Pesquisar por título" aria-label="Pesquisar planos de ação">
+        </div>
+      </div>
+      <h2>Planos de Ação</h2>
+      <div id="planos-list"></div>
+      <p id="message" class="message"></p>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = document.getElementById('user-info');
+      const planosList = document.getElementById('planos-list');
+      const searchInput = document.getElementById('search-input');
+      const message = document.getElementById('message');
+
+      const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+      if (loggedUser && loggedUser.tipo === 'Operador') {
+        userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
+      } else {
+        window.location.href = 'login.html';
+      }
+
+      const loadPlanos = () => {
+        const planos = localStorage.getItem('planos');
+        return planos ? JSON.parse(planos) : [];
+      };
+
+      const normalizeClassName = (text) => {
+        return text
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]/g, '')
+          .trim();
+      };
+
+      const displayPlanos = (planosToDisplay) => {
+        planosList.innerHTML = '';
+        const planos = planosToDisplay || loadPlanos();
+        if (planos.length === 0) {
+          planosList.innerHTML = '<p>Nenhum plano de ação cadastrado.</p>';
+          return;
+        }
+        planos.forEach((plano, index) => {
+          const rawUrgencia = plano.urgencia || 'Desconhecido';
+          const rawImpacto = plano.impacto || 'Desconhecido';
+          const normalizedUrgencia = rawUrgencia.toLowerCase() === 'médio' ? 'média' : rawUrgencia.toLowerCase();
+          const normalizedImpacto = rawImpacto.toLowerCase() === 'médio' ? 'médio' : rawImpacto.toLowerCase();
+          const displayUrgencia = rawUrgencia.toLowerCase() === 'médio' ? 'Média' : rawUrgencia.charAt(0).toUpperCase() + rawUrgencia.slice(1).toLowerCase();
+          const displayImpacto = rawImpacto.toLowerCase() === 'médio' ? 'Médio' : rawImpacto.charAt(0).toUpperCase() + rawImpacto.slice(1).toLowerCase();
+          const urgenciaClass = `urgencia-${normalizeClassName(normalizedUrgencia)}`;
+          const impactoClass = `impacto-${normalizeClassName(normalizedImpacto)}`;
+
+          const planoCard = document.createElement('div');
+          planoCard.className = 'plano-card';
+          planoCard.innerHTML = `
+            <div class="plano-left">
+              <h3>${plano.titulo || 'Plano Sem Título'}</h3>
+              <p class="description">${plano.descricao || 'Sem descrição'}</p>
+              <p><strong>Área Responsável:</strong> ${plano.areaResponsavel || 'Não definido'}</p>
+              <p><strong>Data de Criação:</strong> ${plano.dataCriacao || 'Não definido'}</p>
+              <p><strong>Ativos Impactados:</strong> ${plano.ativosImpactados ? plano.ativosImpactados.join(', ') : 'Não definido'}</p>
+              <p><strong>Áreas Impactadas:</strong> ${plano.areasImpactadas ? plano.areasImpactadas.join(', ') : 'Não definido'}</p>
+            </div>
+            <div class="plano-right">
+              <div class="tags">
+                <span class="tag ${urgenciaClass}">Urgência: ${displayUrgencia}</span>
+                <span class="tag ${impactoClass}">Impacto: ${displayImpacto}</span>
+              </div>
+              <div class="action-buttons">
+                <button class="etapas-btn" onclick="viewEtapas(${index})">Etapas</button>
+              </div>
+            </div>
+          `;
+          planosList.appendChild(planoCard);
+        });
+      };
+
+      const viewEtapas = (index) => {
+        const planos = loadPlanos();
+        if (planos[index]) {
+          window.location.href = `detalhes-etapas-operador.html?planoId=${index}`;
+        } else {
+          message.textContent = 'Erro: Plano não encontrado.';
+          message.className = 'message error';
+          message.style.display = 'block';
+        }
+      };
+
+      searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const planos = loadPlanos();
+        const filteredPlanos = planos.filter(plano =>
+          plano.titulo.toLowerCase().includes(searchTerm)
+        );
+        displayPlanos(filteredPlanos);
+      });
+
+      displayPlanos();
+
+      window.viewEtapas = viewEtapas;
+    });
+  </script>
+</body>
+</html>
