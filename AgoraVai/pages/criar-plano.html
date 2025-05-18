@@ -265,7 +265,11 @@
         console.log('Áreas inicializadas:', initialAreas);
       }
       if (!localStorage.getItem('ativos')) {
-        const initialAtivos = ['Servidor A', 'Servidor B', 'Sistema X'];
+        const initialAtivos = [
+          { nome: 'Servidor A', area: 'TI' },
+          { nome: 'Servidor B', area: 'Produção' },
+          { nome: 'Sistema X', area: 'TI' }
+        ];
         localStorage.setItem('ativos', JSON.stringify(initialAtivos));
         console.log('Ativos inicializados:', initialAtivos);
       }
@@ -313,9 +317,10 @@
         if (ativosImpactadosInput) {
           ativosImpactados = ativosImpactadosInput.split(',').map(item => item.trim()).filter(item => item);
           const existingAtivos = loadAtivos();
-          const invalidAtivos = ativosImpactados.filter(ativo => !existingAtivos.includes(ativo));
+          const existingAtivoNames = existingAtivos.map(ativo => ativo.nome);
+          const invalidAtivos = ativosImpactados.filter(ativo => !existingAtivoNames.includes(ativo));
           if (invalidAtivos.length > 0) {
-            message.textContent = `Erro: Os seguintes ativos não existem: ${invalidAtivos.join(', ')}. Crie os ativos primeiro em "Criar Ativo". Ativos disponíveis: ${existingAtivos.join(', ')}.`;
+            message.textContent = `Erro: Os seguintes ativos não existem: ${invalidAtivos.join(', ')}. Crie os ativos primeiro em "Criar Ativo". Ativos disponíveis: ${existingAtivoNames.join(', ')}.`;
             message.className = 'message error';
             message.style.display = 'block';
             return;

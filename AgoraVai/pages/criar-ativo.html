@@ -97,6 +97,7 @@
       font-size: 24px;
       font-weight: 700;
       margin: 0 0 20px;
+      text-align: left;
     }
     .content {
       display: flex;
@@ -155,6 +156,9 @@
     .ativo-item {
       padding: 10px;
       border-bottom: 1px solid #E0E0E0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     .ativo-item:last-child {
       border-bottom: none;
@@ -166,6 +170,18 @@
     .ativo-area {
       font-size: 14px;
       color: #888888;
+    }
+    .delete-btn {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .delete-btn:hover {
+      background-color: #A52A2A;
     }
     .message {
       font-size: 14px;
@@ -285,14 +301,34 @@
           p.style.color = '#888888';
           ativosList.appendChild(p);
         } else {
-          ativos.forEach(ativo => {
+          ativos.forEach((ativo, index) => {
             const div = document.createElement('div');
             div.className = 'ativo-item';
             div.innerHTML = `
-              <div class="ativo-nome">${ativo.nome}</div>
-              <div class="ativo-area">Área: ${ativo.area}</div>
+              <div>
+                <div class="ativo-nome">${ativo.nome}</div>
+                <div class="ativo-area">Área: ${ativo.area}</div>
+              </div>
+              <button class="delete-btn" data-index="${index}">Excluir</button>
             `;
             ativosList.appendChild(div);
+          });
+          // Adicionar evento de exclusão após renderizar
+          document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              const index = parseInt(e.target.getAttribute('data-index'));
+              if (confirm(`Deseja excluir o ativo "${ativos[index].nome}"?`)) {
+                ativos.splice(index, 1);
+                localStorage.setItem('ativos', JSON.stringify(ativos));
+                displayAtivos();
+                message.textContent = 'Ativo excluído com sucesso!';
+                message.className = 'message success';
+                message.style.display = 'block';
+                setTimeout(() => {
+                  message.style.display = 'none';
+                }, 2000);
+              }
+            });
           });
         }
       };
