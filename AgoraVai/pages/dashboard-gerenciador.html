@@ -231,28 +231,38 @@
       background-color: #999999 !important;
       color: #FFFFFF !important;
     }
-    .plano-left .tag.nao-iniciado {
-      background-color: #B0BEC5;
-      color: #000000;
+    .plano-right .action-buttons {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      justify-content: flex-end;
     }
-    .plano-left .tag.em-andamento {
-      background-color: #FFCA28;
-      color: #000000;
+    .plano-right .action-buttons button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      flex: 1;
     }
-    .plano-left .tag.finalizado {
+    .plano-right .action-buttons .edit-btn {
       background-color: #4CAF50;
       color: #FFFFFF;
     }
-    .plano-right button {
+    .plano-right .action-buttons .edit-btn:hover {
+      background-color: #388E3C;
+    }
+    .plano-right .action-buttons .delete-btn {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+    }
+    .plano-right .action-buttons .delete-btn:hover {
+      background-color: #A52A2A;
+    }
+    .plano-right .action-buttons .etapas-btn {
       background-color: #1976D2;
       color: #FFFFFF;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
     }
-    .plano-right button:hover {
+    .plano-right .action-buttons .etapas-btn:hover {
       background-color: #1565C0;
     }
     .message {
@@ -304,6 +314,133 @@
       <p id="message" class="message"></p>
     </main>
   </div>
-  <script src="../js/dashboard-gerenciador.js" onload="console.log('JS carregado com sucesso')" onerror="console.error('Erro ao carregar JS: ../js/dashboard-gerenciador.js')"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = document.getElementById('user-info');
+      const planosList = document.getElementById('planos-list');
+      const searchInput = document.getElementById('search-input');
+      const message = document.getElementById('message');
+
+      const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+      if (loggedUser && loggedUser.tipo === 'Gerenciador') {
+        userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
+      } else {
+        window.location.href = 'login.html';
+      }
+
+      const loadPlanos = () => {
+        const planos = localStorage.getItem('planos');
+        return planos ? JSON.parse(planos) : [];
+      };
+
+      const normalizeClassName = (text) => {
+        return text
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]/g, '')
+          .trim();
+      };
+
+      const displayPlanos = (planosToDisplay) => {
+        planosList.innerHTML = '';
+        const planos = planosToDisplay || loadPlanos();
+        if (planos.length === 0) {
+          planosList.innerHTML = '<p>Nenhum plano de ação cadastrado.</p>';
+          return;
+        }
+        planos.forEach((plano, index) => {
+          const rawUrgencia = plano.urgencia || 'Desconhecido';
+          const rawImpacto = plano.impacto || 'Desconhecido';
+          const normalizedUrgencia = rawUrgencia.toLowerCase() === 'médio' ? 'média' : rawUrgencia.toLowerCase();
+          const normalizedImpacto = rawImpacto.toLowerCase() === 'médio' ? 'médio' : rawImpacto.toLowerCase();
+          const displayUrgencia = rawUrgencia.toLowerCase() === 'médio' ? 'Média' : rawUrgencia.charAt(0).toUpperCase() + rawUrgencia.slice(1).toLowerCase();
+          const displayImpacto = rawImpacto.toLowerCase() === 'médio' ? 'Médio' : rawImpacto.charAt(0).toUpperCase() + rawImpacto.slice(1).toLowerCase();
+          const urgenciaClass = `urgencia-${normalizeClassName(normalizedUrgencia)}`;
+          const impactoClass = `impacto-${normalizeClassName(normalizedImpacto)}`;
+
+          const planoCard = document.createElement('div');
+          planoCard.className = 'plano-card';
+          planoCard.innerHTML = `
+            <div class="plano-left">
+              <h3>${plano.titulo || 'Plano Sem Título'}</h3>
+              <p class="description">${plano.descricao || 'Sem descrição'}</p>
+              <p><strong>Área Responsável:</strong> ${plano.areaResponsavel || 'Não definido'}</p>
+              <p><strong>Data de Criação:</strong> ${plano.dataCriacao || 'Não definido'}</p>
+              <p><strong>Ativos Impactados:</strong> ${plano.ativosImpactados ? plano.ativosImpactados.join(', ') : 'Não definido'}</p>
+              <p><strong>Áreas Impactadas:</strong> ${plano.areasImpactadas ? plano.areasImpactadas.join(', ') : 'Não definido'}</p>
+            </div>
+            <div class="plano-right">
+              <div class="tags">
+                <span class="tag ${urgenciaClass}">Urgência: ${displayUrgencia}</span>
+                <span class="tag ${impactoClass}">Impacto: ${displayImpacto}</span>
+              </div>
+              <div class="action-buttons">
+                <button class="edit-btn" onclick="editPlano(${index})">Editar</button>
+                <button class="delete-btn" onclick="deletePlano(${index})">Excluir</button>
+                <button class="etapas-btn" onclick="viewEtapas(${index})">Etapas</button>
+              </div>
+            </div>
+          `;
+          planosList.appendChild(planoCard);
+        });
+      };
+
+      const editPlano = (index) => {
+        const planos = loadPlanos();
+        if (planos[index]) {
+          window.location.href = `editar-plano.html?planoId=${index}`;
+        } else {
+          message.textContent = 'Erro: Plano não encontrado.';
+          message.className = 'message error';
+          message.style.display = 'block';
+        }
+      };
+
+      const deletePlano = (index) => {
+        if (confirm('Tem certeza que deseja excluir este plano de ação?')) {
+          const planos = loadPlanos();
+          if (planos[index]) {
+            planos.splice(index, 1);
+            localStorage.setItem('planos', JSON.stringify(planos));
+            displayPlanos();
+            message.textContent = 'Plano de ação excluído com sucesso!';
+            message.className = 'message success';
+            message.style.display = 'block';
+          } else {
+            message.textContent = 'Erro: Plano não encontrado.';
+            message.className = 'message error';
+            message.style.display = 'block';
+          }
+        }
+      };
+
+      const viewEtapas = (index) => {
+        const planos = loadPlanos();
+        if (planos[index]) {
+          window.location.href = `criar-etapa.html?planoId=${index}`;
+        } else {
+          message.textContent = 'Erro: Plano não encontrado.';
+          message.className = 'message error';
+          message.style.display = 'block';
+        }
+      };
+
+      searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        const planos = loadPlanos();
+        const filteredPlanos = planos.filter(plano =>
+          plano.titulo.toLowerCase().includes(searchTerm)
+        );
+        displayPlanos(filteredPlanos);
+      });
+
+      displayPlanos();
+
+      window.editPlano = editPlano;
+      window.deletePlano = deletePlano;
+      window.viewEtapas = viewEtapas;
+    });
+  </script>
 </body>
 </html>

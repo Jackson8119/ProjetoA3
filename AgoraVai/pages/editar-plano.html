@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Plano de Ação - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #000000;
+      min-height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #D32F2F;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .alert-icon {
+      font-size: 40px;
+      color: #FFFF00;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 700;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-right span#user-info {
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+    .navbar-right .user-role {
+      background-color: #FF5252;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+    .container {
+      display: flex;
+      margin-top: 100px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444444;
+      padding: 20px;
+      position: fixed;
+      height: calc(100vh - 100px);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: #FFA500;
+    }
+    main {
+      flex: 1;
+      margin-left: 220px;
+      padding: 30px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #555555;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .form-group textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    .form-group input[type="text"][readonly] {
+      background-color: #E0E0E0;
+    }
+    .form-group .info-text {
+      font-size: 14px;
+      color: #555555;
+      margin-top: 5px;
+    }
+    .form-buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .form-buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .form-buttons .save-btn {
+      background-color: #4CAF50;
+      color: #FFFFFF;
+    }
+    .form-buttons .save-btn:hover {
+      background-color: #388E3C;
+    }
+    .form-buttons .cancel-btn {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+    }
+    .form-buttons .cancel-btn:hover {
+      background-color: #A52A2A;
+    }
+    .message {
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+    }
+    .message.error {
+      color: #D32F2F;
+    }
+    .message.success {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="alert-icon">⚠</span>
+        <h1>Sistema de Gestão de Riscos</h1>
+      </div>
+      <div class="navbar-right">
+        <span id="user-info"></span>
+        <span class="user-role">Gerenciador</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="dashboard-gerenciador.html">📋 Planos de Ação</a></li>
+        <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
+        <li><a href="criar-area.html">📂 Áreas</a></li>
+        <li><a href="login.html">🚪 Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Editar Plano de Ação</h2>
+      <form id="plano-form">
+        <div class="form-group">
+          <label for="titulo">Título:</label>
+          <input type="text" id="titulo" name="titulo" required>
+        </div>
+        <div class="form-group">
+          <label for="descricao">Descrição:</label>
+          <textarea id="descricao" name="descricao" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="dataCriacao">Data de Criação:</label>
+          <input type="text" id="dataCriacao" name="dataCriacao" readonly>
+        </div>
+        <div class="form-group">
+          <label for="areaResponsavel">Área Responsável:</label>
+          <input type="text" id="areaResponsavel" name="areaResponsavel" required>
+        </div>
+        <div class="form-group">
+          <label for="ativosImpactados">Ativos Impactados:</label>
+          <input type="text" id="ativosImpactados" name="ativosImpactados">
+          <p class="info-text">Digite os valores separados por vírgula (ex.: Servidor A, Servidor B)</p>
+        </div>
+        <div class="form-group">
+          <label for="areasImpactadas">Áreas Impactadas:</label>
+          <input type="text" id="areasImpactadas" name="areasImpactadas">
+          <p class="info-text">Digite os valores separados por vírgula (ex.: TI, Produção)</p>
+        </div>
+        <div class="form-group">
+          <label for="urgencia">Urgência:</label>
+          <select id="urgencia" name="urgencia" required>
+            <option value="Baixa">Baixa</option>
+            <option value="Média">Média</option>
+            <option value="Alta">Alta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="impacto">Impacto:</label>
+          <select id="impacto" name="impacto" required>
+            <option value="Baixo">Baixo</option>
+            <option value="Médio">Médio</option>
+            <option value="Alto">Alto</option>
+          </select>
+        </div>
+        <div class="form-buttons">
+          <button type="submit" class="save-btn">Salvar</button>
+          <button type="button" class="cancel-btn" onclick="window.location.href='dashboard-gerenciador.html'">Cancelar</button>
+        </div>
+      </form>
+      <p id="message" class="message"></p>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = document.getElementById('user-info');
+      const form = document.getElementById('plano-form');
+      const message = document.getElementById('message');
+      const titulo = document.getElementById('titulo');
+      const descricao = document.getElementById('descricao');
+      const dataCriacao = document.getElementById('dataCriacao');
+      const areaResponsavel = document.getElementById('areaResponsavel');
+      const ativosImpactados = document.getElementById('ativosImpactados');
+      const areasImpactadas = document.getElementById('areasImpactadas');
+      const urgencia = document.getElementById('urgencia');
+      const impacto = document.getElementById('impacto');
+
+      const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+      if (loggedUser && loggedUser.tipo === 'Gerenciador') {
+        userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
+      } else {
+        window.location.href = 'login.html';
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const planoId = parseInt(urlParams.get('planoId'), 10);
+      if (isNaN(planoId) || planoId < 0) {
+        message.textContent = 'Erro: ID do plano inválido.';
+        message.className = 'message error';
+        message.style.display = 'block';
+        return;
+      }
+
+      const planos = JSON.parse(localStorage.getItem('planos') || '[]');
+      const plano = planos[planoId];
+      if (!plano) {
+        message.textContent = 'Erro: Plano não encontrado.';
+        message.className = 'message error';
+        message.style.display = 'block';
+        return;
+      }
+
+      // Preencher os campos com os dados do plano
+      titulo.value = plano.titulo || '';
+      descricao.value = plano.descricao || '';
+      dataCriacao.value = plano.dataCriacao || new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      areaResponsavel.value = plano.areaResponsavel || '';
+      ativosImpactados.value = plano.ativosImpactados ? plano.ativosImpactados.join(', ') : '';
+      areasImpactadas.value = plano.areasImpactadas ? plano.areasImpactadas.join(', ') : '';
+      urgencia.value = plano.urgencia || 'Baixa';
+      impacto.value = plano.impacto || 'Baixo';
+
+      const loadAreas = () => {
+        const areas = localStorage.getItem('areas');
+        return areas ? JSON.parse(areas) : [];
+      };
+
+      const loadAtivos = () => {
+        const ativos = localStorage.getItem('ativos');
+        return ativos ? JSON.parse(ativos).map(ativo => ativo.nome) : [];
+      };
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const updatedPlano = {
+          id: plano.id || planoId.toString(),
+          titulo: titulo.value.trim(),
+          descricao: descricao.value.trim(),
+          dataCriacao: dataCriacao.value,
+          areaResponsavel: areaResponsavel.value.trim(),
+          ativosImpactados: ativosImpactados.value.trim() ? ativosImpactados.value.split(',').map(item => item.trim()).filter(item => item) : [],
+          areasImpactadas: areasImpactadas.value.trim() ? areasImpactadas.value.split(',').map(item => item.trim()).filter(item => item) : [],
+          urgencia: urgencia.value,
+          impacto: impacto.value,
+          etapas: plano.etapas || []
+        };
+
+        const existingAreas = loadAreas();
+        if (!existingAreas.includes(updatedPlano.areaResponsavel)) {
+          message.textContent = `Erro: A área responsável "${updatedPlano.areaResponsavel}" não existe. Crie a área primeiro em "Criar Área". Áreas disponíveis: ${existingAreas.join(', ')}.`;
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        const existingAtivos = loadAtivos();
+        const invalidAtivos = updatedPlano.ativosImpactados.filter(ativo => !existingAtivos.includes(ativo));
+        if (invalidAtivos.length > 0) {
+          message.textContent = `Erro: Os seguintes ativos não existem: ${invalidAtivos.join(', ')}. Crie os ativos primeiro em "Criar Ativo". Ativos disponíveis: ${existingAtivos.join(', ')}.`;
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        const invalidAreas = updatedPlano.areasImpactadas.filter(area => !existingAreas.includes(area));
+        if (invalidAreas.length > 0) {
+          message.textContent = `Erro: As seguintes áreas não existem: ${invalidAreas.join(', ')}. Crie as áreas primeiro em "Criar Área". Áreas disponíveis: ${existingAreas.join(', ')}.`;
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        planos[planoId] = updatedPlano;
+        localStorage.setItem('planos', JSON.stringify(planos));
+        message.textContent = 'Plano de ação atualizado com sucesso!';
+        message.className = 'message success';
+        message.style.display = 'block';
+
+        setTimeout(() => {
+          window.location.href = 'dashboard-gerenciador.html';
+        }, 1000);
+      });
+    });
+  </script>
+</body>
+</html>
