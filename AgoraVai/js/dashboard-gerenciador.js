@@ -23,8 +23,32 @@ document.addEventListener('DOMContentLoaded', () => {
         areaResponsavel: 'TI',
         ativosImpactados: ['Servidor A'],
         areasImpactadas: ['TI', 'Produção'],
-        urgencia: 'Médio',
+        urgencia: 'Média',
         impacto: 'Médio',
+        etapas: []
+      },
+      {
+        id: '2',
+        titulo: 'Plano de Backup',
+        descricao: 'Criar backup do sistema',
+        dataCriacao: '15/05/2025',
+        areaResponsavel: 'TI',
+        ativosImpactados: ['Servidor B'],
+        areasImpactadas: ['TI'],
+        urgencia: 'Alta',
+        impacto: 'Alto',
+        etapas: []
+      },
+      {
+        id: '3',
+        titulo: 'Plano de Manutenção',
+        descricao: 'Manutenção preventiva',
+        dataCriacao: '16/05/2025',
+        areaResponsavel: 'TI',
+        ativosImpactados: ['Servidor A'],
+        areasImpactadas: ['TI'],
+        urgencia: 'Baixa',
+        impacto: 'Baixa',
         etapas: []
       }
     ];
@@ -40,6 +64,18 @@ document.addEventListener('DOMContentLoaded', () => {
     return parsedPlanos;
   };
 
+  // Função para normalizar texto (ex.: "Média" → "media")
+  const normalizeClassName = (text) => {
+    const normalized = text
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]/g, '')
+      .trim(); // Remove espaços extras
+    console.log(`Normalizando "${text}" para "${normalized}" (para impacto ou urgência)`);
+    return normalized;
+  };
+
   // Função para exibir planos
   const displayPlanos = (planos) => {
     console.log('Exibindo planos:', planos);
@@ -53,10 +89,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     planos.forEach(plano => {
       const status = plano.etapas && plano.etapas.length > 0 ? plano.etapas[plano.etapas.length - 1].status : 'Não Iniciado';
-      const urgenciaClass = `urgencia-${plano.urgencia.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}`;
-      const impactoClass = `impacto-${plano.impacto.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')}`;
+      const rawUrgencia = plano.urgencia || 'Desconhecido';
+      const rawImpacto = plano.impacto || 'Desconhecido';
+      const urgenciaClass = `urgencia-${normalizeClassName(rawUrgencia)}`;
+      const impactoClass = `impacto-${normalizeClassName(rawImpacto)}`;
+      console.log('Valores brutos do plano:', { id: plano.id, titulo: plano.titulo, rawUrgencia, rawImpacto });
       console.log('Classes geradas:', { urgenciaClass, impactoClass });
-      console.log('HTML do plano-right:', `<div class="plano-right"><div class="tags"><span class="tag ${urgenciaClass}">Urgência: ${plano.urgencia}</span><span class="tag ${impactoClass}">Impacto: ${plano.impacto}</span></div><button onclick="viewDetalhes('${plano.id}')">Ver Detalhes</button></div>`);
+      const rightHTML = `
+        <div class="plano-right">
+          <div class="tags">
+            <span class="tag ${urgenciaClass}">Urgência: ${rawUrgencia}</span>
+            <span class="tag ${impactoClass}">Impacto: ${rawImpacto}</span>
+          </div>
+          <button onclick="viewDetalhes('${plano.id}')">Ver Detalhes</button>
+        </div>
+      `;
+      console.log('HTML gerado do plano-right:', rightHTML);
       const card = document.createElement('div');
       card.className = 'plano-card';
       card.innerHTML = `
@@ -66,15 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
           <p>Criado em: ${plano.dataCriacao}</p>
           <span class="tag ${status.toLowerCase().replace(' ', '-')}">Situação: ${status}</span>
         </div>
-        <div class="plano-right">
-          <div class="tags">
-            <span class="tag ${urgenciaClass}">Urgência: ${plano.urgencia}</span>
-            <span class="tag ${impactoClass}">Impacto: ${plano.impacto}</span>
-          </div>
-          <button onclick="viewDetalhes('${plano.id}')">Ver Detalhes</button>
-        </div>
+        ${rightHTML}
       `;
       planosList.appendChild(card);
+      console.log('HTML final renderizado do plano:', card.outerHTML);
     });
   };
 

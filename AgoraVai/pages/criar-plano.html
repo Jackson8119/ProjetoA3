@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Criar Plano de Ação - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #000000;
+      min-height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #D32F2F;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .alert-icon {
+      font-size: 40px;
+      color: #FFFF00;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 700;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-right span#user-info {
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+    .navbar-right .user-role {
+      background-color: #FF5252;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+    .container {
+      display: flex;
+      margin-top: 100px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444444;
+      padding: 20px;
+      position: fixed;
+      height: calc(100vh - 100px);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: #FFA500;
+    }
+    main {
+      flex: 1;
+      margin-left: 220px;
+      padding: 30px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .form-container {
+      background-color: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .form-group input[type="text"],
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #555555;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .form-group textarea {
+      height: 100px;
+      resize: vertical;
+    }
+    .form-group select[multiple] {
+      height: 120px;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .form-actions button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+    }
+    .form-actions button.save {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: 1px solid #FFFFFF;
+    }
+    .form-actions button.save:hover {
+      background-color: #A52A2A;
+    }
+    .form-actions button.cancel {
+      background-color: #B0BEC5;
+      color: #000000;
+    }
+    .form-actions button.cancel:hover {
+      background-color: #90A4AE;
+    }
+    .message {
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+    }
+    .message.error {
+      color: #D32F2F;
+    }
+    .message.success {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="alert-icon">⚠</span>
+        <h1>Sistema de Gestão de Riscos</h1>
+      </div>
+      <div class="navbar-right">
+        <span id="user-info"></span>
+        <span class="user-role">Gerenciador</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="dashboard-gerenciador.html">📋 Planos de Ação</a></li>
+        <li><a href="criar-etapa.html">📑 Etapas</a></li>
+        <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
+        <li><a href="criar-area.html">📂 Áreas</a></li>
+        <li><a href="login.html">🚪 Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Criar Novo Plano de Ação</h2>
+      <div class="form-container">
+        <div class="form-group">
+          <label for="titulo">Título</label>
+          <input type="text" id="titulo" placeholder="Digite o título do plano" required>
+        </div>
+        <div class="form-group">
+          <label for="descricao">Descrição</label>
+          <textarea id="descricao" placeholder="Descreva o plano de ação" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="area-responsavel">Área Responsável</label>
+          <input type="text" id="area-responsavel" placeholder="Ex.: TI" required>
+        </div>
+        <div class="form-group">
+          <label for="ativos-impactados">Ativos Impactados</label>
+          <select id="ativos-impactados" multiple>
+            <option value="Servidor A">Servidor A</option>
+            <option value="Servidor B">Servidor B</option>
+            <option value="Máquina X">Máquina X</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="areas-impactadas">Áreas Impactadas</label>
+          <select id="areas-impactadas" multiple>
+            <option value="TI">TI</option>
+            <option value="Produção">Produção</option>
+            <option value="Financeiro">Financeiro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="urgencia">Urgência</label>
+          <select id="urgencia" required>
+            <option value="Baixa">Baixa</option>
+            <option value="Média">Média</option>
+            <option value="Alta">Alta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="impacto">Impacto</label>
+          <select id="impacto" required>
+            <option value="Baixo">Baixo</option>
+            <option value="Médio">Médio</option>
+            <option value="Alto">Alto</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="cancel" onclick="window.location.href='dashboard-gerenciador.html'">Cancelar</button>
+          <button class="save" onclick="salvarPlano()">Salvar</button>
+        </div>
+      </div>
+      <p id="message" class="message"></p>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = document.getElementById('user-info');
+      const message = document.getElementById('message');
+
+      // Carregar usuário logado
+      const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+      if (loggedUser && loggedUser.tipo === 'Gerenciador') {
+        userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
+      } else {
+        window.location.href = 'login.html';
+      }
+
+      // Função para salvar o plano
+      window.salvarPlano = () => {
+        const titulo = document.getElementById('titulo').value.trim();
+        const descricao = document.getElementById('descricao').value.trim();
+        const areaResponsavel = document.getElementById('area-responsavel').value.trim();
+        const ativosImpactados = Array.from(document.getElementById('ativos-impactados').selectedOptions).map(opt => opt.value);
+        const areasImpactadas = Array.from(document.getElementById('areas-impactadas').selectedOptions).map(opt => opt.value);
+        const urgencia = document.getElementById('urgencia').value;
+        const impacto = document.getElementById('impacto').value;
+
+        // Validação
+        if (!titulo || !descricao || !areaResponsavel || ativosImpactados.length === 0 || areasImpactadas.length === 0) {
+          message.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        // Carregar planos existentes
+        const planos = JSON.parse(localStorage.getItem('planos') || '[]');
+        
+        // Criar novo plano
+        const novoPlano = {
+          id: (planos.length + 1).toString(),
+          titulo,
+          descricao,
+          dataCriacao: new Date().toLocaleDateString('pt-BR'), // Ex.: "17/05/2025"
+          areaResponsavel,
+          ativosImpactados,
+          areasImpactadas,
+          urgencia,
+          impacto,
+          etapas: []
+        };
+
+        // Adicionar ao localStorage
+        planos.push(novoPlano);
+        localStorage.setItem('planos', JSON.stringify(planos));
+
+        // Exibir mensagem de sucesso e redirecionar
+        message.textContent = 'Plano criado com sucesso!';
+        message.className = 'message success';
+        message.style.display = 'block';
+        setTimeout(() => {
+          window.location.href = 'dashboard-gerenciador.html';
+        }, 1000);
+      };
+    });
+  </script>
+</body>
+</html>

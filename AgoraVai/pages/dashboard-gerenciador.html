@@ -6,7 +6,6 @@
   <title>Dashboard Gerenciador - Sistema de Gestão de Riscos</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Estilos gerais */
     body {
       margin: 0;
       padding: 0;
@@ -181,39 +180,55 @@
     .plano-right .tags {
       width: 100%;
       min-height: 60px;
-      background-color: #F0F0F0; /* Fundo cinza claro para depuração */
       margin-bottom: 10px;
     }
     .plano-right .tag {
-      display: block !important;
+      display: block;
       padding: 6px 12px;
-      border-radius: 8px !important;
+      border-radius: 8px;
       font-size: 14px;
       margin-bottom: 8px;
       text-align: center;
-      width: 100% !important;
+      width: 100%;
       box-sizing: border-box;
       z-index: 10;
       position: relative;
-      opacity: 1 !important;
-      visibility: visible !important;
-      background-color: #FFCA28 !important; /* Fallback para depuração */
-      color: #000000 !important;
-      border: 2px solid #FF0000 !important; /* Borda vermelha para depuração */
+      opacity: 1;
+      visibility: visible;
+      background-color: #CCCCCC; /* Fallback para depuração */
+      color: #000000;
     }
-    .plano-right .tag.urgencia-media,
-    .plano-right .tag.impacto-media {
-      background-color: #FFCA28 !important;
-      color: #000000 !important;
+    .plano-right .tag[class*="urgencia-"],
+    .plano-right .tag[class*="impacto-"] {
+      background-color: transparent; /* Evita fundo padrão */
     }
-    .plano-right .tag.urgencia-baixa,
-    .plano-right .tag.impacto-baixa {
+    .plano-right .tag.urgencia-baixa {
       background-color: #4CAF50 !important;
       color: #FFFFFF !important;
     }
-    .plano-right .tag.urgencia-alta,
-    .plano-right .tag.impacto-alta {
+    .plano-right .tag.urgencia-media {
+      background-color: #FFCA28 !important;
+      color: #000000 !important;
+    }
+    .plano-right .tag.urgencia-alta {
       background-color: #D32F2F !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.impacto-baixo {
+      background-color: #4CAF50 !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.impacto-medio {
+      background-color: #FFCA28 !important;
+      color: #000000 !important;
+    }
+    .plano-right .tag.impacto-alto {
+      background-color: #D32F2F !important;
+      color: #FFFFFF !important;
+    }
+    .plano-right .tag.urgencia-desconhecido,
+    .plano-right .tag.impacto-desconhecido {
+      background-color: #999999 !important;
       color: #FFFFFF !important;
     }
     .plano-left .tag.nao-iniciado {
