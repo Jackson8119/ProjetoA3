@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciar Ativos - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background-color: #F5F5F5;
+      color: #000000;
+      min-height: 100vh;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #D32F2F;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+    }
+    .alert-icon {
+      font-size: 40px;
+      color: #FFFF00;
+      margin-right: 10px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #FFFFFF;
+      margin: 0;
+      font-weight: 700;
+    }
+    .navbar-right {
+      display: flex;
+      align-items: center;
+    }
+    .navbar-right span#user-info {
+      font-size: 16px;
+      color: #FFFFFF;
+      margin-right: 10px;
+    }
+    .navbar-right .user-role {
+      background-color: #FF5252;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 16px;
+      color: #FFFFFF;
+    }
+    .container {
+      display: flex;
+      margin-top: 100px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444444;
+      padding: 20px;
+      position: fixed;
+      height: calc(100vh - 100px);
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      font-size: 16px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover, .sidebar a.active {
+      color: #FFA500;
+    }
+    main {
+      flex: 1;
+      margin-left: 220px;
+      padding: 30px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .content {
+      display: flex;
+      gap: 20px;
+    }
+    .card {
+      background-color: #FFFFFF;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      flex: 1;
+    }
+    .card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 15px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #555555;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    .add-btn {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .add-btn:hover {
+      background-color: #A52A2A;
+    }
+    .ativos-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .ativo-item {
+      padding: 10px;
+      border-bottom: 1px solid #E0E0E0;
+    }
+    .ativo-item:last-child {
+      border-bottom: none;
+    }
+    .ativo-nome {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .ativo-area {
+      font-size: 14px;
+      color: #888888;
+    }
+    .message {
+      font-size: 14px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+    }
+    .message.error {
+      color: #D32F2F;
+    }
+    .message.success {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="alert-icon">⚠</span>
+        <h1>Sistema de Gestão de Riscos</h1>
+      </div>
+      <div class="navbar-right">
+        <span id="user-info"></span>
+        <span class="user-role">Gerenciador</span>
+      </div>
+    </div>
+  </header>
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="dashboard-gerenciador.html">📋 Planos de Ação</a></li>
+        <li><a href="criar-etapa.html">📑 Etapas</a></li>
+        <li><a href="criar-ativo.html" class="active">🛠️ Ativos</a></li>
+        <li><a href="criar-area.html">📂 Áreas</a></li>
+        <li><a href="login.html">🚪 Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Gerenciar Ativos</h2>
+      <div class="content">
+        <div class="card">
+          <h3>Cadastrar Novo Ativo</h3>
+          <form id="ativo-form">
+            <div class="form-group">
+              <label for="ativo-nome">Nome do Ativo:</label>
+              <input type="text" id="ativo-nome" name="ativo-nome" required>
+            </div>
+            <div class="form-group">
+              <label for="ativo-area">Área Responsável:</label>
+              <select id="ativo-area" name="ativo-area" required>
+                <option value="" disabled selected>Selecione uma área</option>
+                <!-- Áreas serão preenchidas via JS -->
+              </select>
+            </div>
+            <button type="submit" class="add-btn">
+              <span>+</span> Adicionar Ativo
+            </button>
+          </form>
+          <p id="message" class="message"></p>
+        </div>
+        <div class="card">
+          <h3>Ativos Cadastrados</h3>
+          <div class="ativos-list" id="ativos-list">
+            <!-- Ativos serão preenchidos via JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const userInfo = document.getElementById('user-info');
+      const form = document.getElementById('ativo-form');
+      const message = document.getElementById('message');
+      const ativosList = document.getElementById('ativos-list');
+      const areaSelect = document.getElementById('ativo-area');
+
+      const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+      if (loggedUser && loggedUser.tipo === 'Gerenciador') {
+        userInfo.textContent = `Olá, ${loggedUser.nomeCompleto}`;
+      } else {
+        window.location.href = 'login.html';
+      }
+
+      // Carregar áreas do localStorage
+      const loadAreas = () => {
+        const areas = localStorage.getItem('areas');
+        return areas ? JSON.parse(areas) : [];
+      };
+
+      // Carregar ativos do localStorage
+      const loadAtivos = () => {
+        const ativos = localStorage.getItem('ativos');
+        return ativos ? JSON.parse(ativos) : [];
+      };
+
+      // Preencher dropdown de áreas
+      const populateAreas = () => {
+        const areas = loadAreas();
+        areaSelect.innerHTML = '<option value="" disabled selected>Selecione uma área</option>';
+        areas.forEach(area => {
+          const option = document.createElement('option');
+          option.value = area;
+          option.textContent = area;
+          areaSelect.appendChild(option);
+        });
+      };
+
+      // Exibir lista de ativos
+      const displayAtivos = () => {
+        const ativos = loadAtivos();
+        ativosList.innerHTML = '';
+        if (ativos.length === 0) {
+          const p = document.createElement('p');
+          p.textContent = 'Nenhum ativo cadastrado.';
+          p.style.color = '#888888';
+          ativosList.appendChild(p);
+        } else {
+          ativos.forEach(ativo => {
+            const div = document.createElement('div');
+            div.className = 'ativo-item';
+            div.innerHTML = `
+              <div class="ativo-nome">${ativo.nome}</div>
+              <div class="ativo-area">Área: ${ativo.area}</div>
+            `;
+            ativosList.appendChild(div);
+          });
+        }
+      };
+
+      // Inicializar áreas e ativos, se necessário
+      if (!localStorage.getItem('areas')) {
+        const initialAreas = ['TI', 'Produção', 'RH'];
+        localStorage.setItem('areas', JSON.stringify(initialAreas));
+        console.log('Áreas inicializadas:', initialAreas);
+      }
+      if (!localStorage.getItem('ativos')) {
+        const initialAtivos = [
+          { nome: 'Servidor A', area: 'TI' },
+          { nome: 'Servidor B', area: 'Produção' },
+          { nome: 'Sistema X', area: 'TI' }
+        ];
+        localStorage.setItem('ativos', JSON.stringify(initialAtivos));
+        console.log('Ativos inicializados:', initialAtivos);
+      }
+
+      // Preencher áreas e exibir ativos na inicialização
+      populateAreas();
+      displayAtivos();
+
+      // Manipular envio do formulário
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const ativoNome = document.getElementById('ativo-nome').value.trim();
+        const ativoArea = document.getElementById('ativo-area').value;
+
+        // Validar campos
+        if (!ativoNome) {
+          message.textContent = 'Erro: O nome do ativo não pode ser vazio.';
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+        if (!ativoArea) {
+          message.textContent = 'Erro: Selecione uma área responsável.';
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        // Verificar duplicatas
+        const existingAtivos = loadAtivos();
+        if (existingAtivos.some(ativo => ativo.nome === ativoNome)) {
+          message.textContent = `Erro: O ativo "${ativoNome}" já existe.`;
+          message.className = 'message error';
+          message.style.display = 'block';
+          return;
+        }
+
+        // Salvar novo ativo
+        const newAtivo = { nome: ativoNome, area: ativoArea };
+        existingAtivos.push(newAtivo);
+        localStorage.setItem('ativos', JSON.stringify(existingAtivos));
+        message.textContent = 'Ativo criado com sucesso!';
+        message.className = 'message success';
+        message.style.display = 'block';
+
+        // Limpar formulário e atualizar lista
+        form.reset();
+        areaSelect.value = '';
+        displayAtivos();
+
+        // Limpar mensagem após 2 segundos
+        setTimeout(() => {
+          message.style.display = 'none';
+        }, 2000);
+      });
+    });
+  </script>
+</body>
+</html>
