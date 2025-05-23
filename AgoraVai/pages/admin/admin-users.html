@@ -3,330 +3,324 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usuários - Sistema de Gestão de Riscos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <title>Gerenciar Usuários - Gestão de Incidentes</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background-color: #F5F7FA;
-      color: #333;
-      min-height: 100vh;
-      overflow-x: hidden;
+      background-color: #f5f5f5;
     }
-    .sidebar {
+    header {
+      background-color: #d32f2f;
+      color: white;
+      padding: 15px;
+      text-align: center;
       position: fixed;
+      width: 100%;
       top: 0;
-      left: -250px;
-      width: 250px;
-      height: 100%;
-      background-color: rgba(68, 68, 68, 0.9);
-      padding: 20px 0;
-      transition: left 0.3s ease;
       z-index: 1000;
     }
-    .sidebar.active {
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu-toggle {
+      font-size: 24px;
+      cursor: pointer;
+    }
+    h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .user-role {
+      background-color: #ff5252;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #444;
+      position: fixed;
+      top: 60px;
       left: 0;
+      height: calc(100vh - 60px);
+      padding-top: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .sidebar.show {
+      opacity: 1;
+      visibility: visible;
     }
     .sidebar ul {
       list-style: none;
       padding: 0;
-      margin: 0;
     }
-    .sidebar li {
-      padding: 15px 20px;
+    .sidebar ul li {
+      padding: 10px 20px;
     }
-    .sidebar a {
-      color: #FFFFFF;
+    .sidebar ul li a {
+      color: white;
       text-decoration: none;
-      font-size: 16px;
-      display: flex;
-      align-items: center;
-    }
-    .sidebar a:hover {
-      color: #FFA500;
-    }
-    .sidebar .profile {
-      margin-top: auto;
-      padding: 15px 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    .toggle-btn {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      background-color: #D32F2F;
-      color: #FFFFFF;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1001;
       font-size: 18px;
     }
-    .toggle-btn:hover {
-      background-color: #A52A2A;
+    .sidebar ul li a:hover {
+      color: #ffa500;
     }
-    .content {
+    main {
       margin-left: 0;
-      padding: 60px 30px;
+      padding: 20px;
+      padding-top: 80px;
       transition: margin-left 0.3s ease;
     }
-    .content.shifted {
-      margin-left: 250px;
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .user-form, .users-table {
-      background-color: #FFFFFF;
-      border-radius: 10px;
+    .users-table th,
+    .users-table td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    .users-table th {
+      background-color: #f5f5f5;
+    }
+    .users-table td button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .edit-btn {
+      background-color: #1976d2;
+      color: white;
+      margin-right: 5px;
+    }
+    .delete-btn {
+      background-color: #d32f2f;
+      color: white;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 2000;
+    }
+    .modal-content {
+      background-color: white;
+      width: 400px;
+      margin: 100px auto;
       padding: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
+      border-radius: 5px;
     }
-    .user-form h3, .users-table h3 {
-      font-size: 20px;
-      color: #333;
-      margin: 0 0 15px;
+    .modal-content h3 {
+      margin-top: 0;
     }
     .form-group {
       margin-bottom: 15px;
     }
     .form-group label {
       display: block;
-      font-size: 14px;
-      color: #666;
       margin-bottom: 5px;
     }
-    .form-group input, .form-group select {
+    .form-group input,
+    .form-group select {
       width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .save-btn, .cancel-btn {
+      flex: 1;
       padding: 10px;
-      border: 1px solid #E0E0E0;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-    .form-actions button {
-      background-color: #D32F2F;
-      color: #FFFFFF;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-right: 10px;
-    }
-    .form-actions button:hover {
-      background-color: #A52A2A;
-    }
-    .users-table table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    .users-table th, .users-table td {
-      padding: 12px;
-      text-align: left;
-      border-bottom: 1px solid #E0E0E0;
-    }
-    .users-table th {
-      background-color: #F5F7FA;
-      color: #333;
-    }
-    .users-table td button {
-      background-color: #D32F2F;
-      color: #FFFFFF;
-      border: none;
-      padding: 5px 10px;
       border-radius: 5px;
       cursor: pointer;
     }
-    .users-table td button:hover {
-      background-color: #A52A2A;
+    .save-btn {
+      background-color: #d32f2f;
+      color: white;
     }
-    .redirect-options {
-      margin-top: 15px;
-      display: none;
-    }
-    .redirect-options select {
-      padding: 10px;
-      border: 1px solid #E0E0E0;
-      border-radius: 5px;
+    .cancel-btn {
+      background-color: #888;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
-  <nav class="sidebar" id="sidebar">
-    <ul>
-      <li><a href="admin-home.html">🏠 Home</a></li>
-      <li><a href="admin-users.html">👤 Usuários</a></li>
-      <li><a href="criar-area.html">📂 Áreas</a></li>
-      <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
-      <li><a href="#">📋 Planos (Visualizar)</a></li>
-    </ul>
-    <div class="profile"><a href="#">👤 Perfil</a></div>
-  </nav>
-  <div class="content" id="content">
-    <div class="user-form">
-      <h3>Cadastrar Novo Usuário</h3>
-      <form id="user-form">
-        <div class="form-group">
-          <label for="full-name">Nome Completo:</label>
-          <input type="text" id="full-name" required>
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" required>
-        </div>
-        <div class="form-group">
-          <label for="username">Login:</label>
-          <input type="text" id="username" required>
-        </div>
-        <div class="form-group">
-          <label for="password">Senha:</label>
-          <input type="password" id="password" required>
-        </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirmação de Senha:</label>
-          <input type="password" id="confirm-password" required>
-        </div>
-        <div class="form-group">
-          <label for="area">Área de Atuação (Opcional para Gerenciador):</label>
-          <select id="area">
-            <option value="">Não aplicável</option>
-            <!-- Áreas preenchidas via JS -->
-          </select>
-        </div>
-        <div class="form-actions">
-          <button type="submit">Cadastrar</button>
-        </div>
-      </form>
-      <div class="redirect-options" id="redirect-options">
-        <label>Redirecionar para:</label>
-        <select id="redirect-select">
-          <option value="home">Home</option>
-          <option value="new">Novo Cadastro</option>
-        </select>
+  <header>
+    <div class="navbar">
+      <div class="navbar-left">
+        <span class="menu-toggle" onmouseover="showSidebar()" onmouseout="hideSidebar()">☰</span>
+      </div>
+      <h1>Gestão de Incidentes</h1>
+      <div class="navbar-right">
+        <span class="user-role">Administrador</span>
       </div>
     </div>
-    <div class="users-table">
-      <h3>Usuários Cadastrados</h3>
-      <table id="users-table">
+  </header>
+  <div class="container">
+    <nav class="sidebar" id="sidebar" onmouseover="showSidebar()" onmouseout="hideSidebar()">
+      <ul>
+        <li><a href="/pages/admin/admin-home.html">Home</a></li>
+        <li><a href="/pages/admin/admin-users.html">Usuários</a></li>
+        <li><a href="/pages/criar-area.html">Áreas</a></li>
+        <li><a href="/pages/admin/admin-ativos.html">Ativos</a></li>
+        <li><a href="#">Planos (Visualizar)</a></li>
+        <li><a href="/perfil.html">Perfil</a></li>
+        <li><a href="/login.html" onclick="logout()">Sair</a></li>
+      </ul>
+    </nav>
+    <main>
+      <h2>Gerenciamento de Usuários</h2>
+      <table class="users-table">
         <thead>
           <tr>
-            <th>Nome</th>
+            <th>Username</th>
+            <th>Nome Completo</th>
             <th>Email</th>
-            <th>Login</th>
             <th>Tipo</th>
-            <th>Área</th>
-            <th>Ação</th>
+            <th>Ações</th>
           </tr>
         </thead>
-        <tbody></tbody>
+        <tbody id="users-table-body"></tbody>
       </table>
-    </div>
+      <div class="modal" id="user-modal">
+        <div class="modal-content">
+          <h3 id="modal-title">Editar Usuário</h3>
+          <form id="user-form">
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+              <label for="nomeCompleto">Nome Completo:</label>
+              <input type="text" id="nomeCompleto" name="nomeCompleto" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="tipo">Tipo:</label>
+              <select id="tipo" name="tipo" required>
+                <option value="Administrador">Administrador</option>
+                <option value="Usuário">Usuário</option>
+              </select>
+            </div>
+            <div class="modal-actions">
+              <button type="submit" class="save-btn">Salvar</button>
+              <button type="button" class="cancel-btn" onclick="closeModal()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
   </div>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const sidebar = document.getElementById('sidebar');
-      const content = document.getElementById('content');
-      const form = document.getElementById('user-form');
-      const redirectOptions = document.getElementById('redirect-options');
-      const redirectSelect = document.getElementById('redirect-select');
-      const areaSelect = document.getElementById('area');
-      const usersTable = document.getElementById('users-table').getElementsByTagName('tbody')[0];
+    const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
+    if (loggedUser && loggedUser.tipo === 'Administrador') {
+      // Continuar
+    } else {
+      window.location.href = '/login.html';
+    }
 
-      const toggleSidebar = () => {
-        sidebar.classList.toggle('active');
-        content.classList.toggle('shifted');
-      };
+    const loadUsers = () => {
+      const users = localStorage.getItem('users');
+      return users ? JSON.parse(users) : [];
+    };
 
-      const loadAreas = () => JSON.parse(localStorage.getItem('areas') || '[]');
-      const loadUsers = () => JSON.parse(localStorage.getItem('users') || '[]');
-      const saveUsers = (users) => localStorage.setItem('users', JSON.stringify(users));
-      const saveDeletedUsers = (deleted) => localStorage.setItem('deletedUsers', JSON.stringify(deleted));
-
-      const populateAreas = () => {
-        const areas = loadAreas();
-        areaSelect.innerHTML = '<option value="">Não aplicável</option>';
-        areas.forEach(area => {
-          const option = document.createElement('option');
-          option.value = area;
-          option.textContent = area;
-          areaSelect.appendChild(option);
-        });
-      };
-
-      const displayUsers = () => {
-        const users = loadUsers();
-        usersTable.innerHTML = '';
-        users.forEach((user, index) => {
-          const row = usersTable.insertRow();
-          row.insertCell(0).textContent = user.nomeCompleto;
-          row.insertCell(1).textContent = user.email;
-          row.insertCell(2).textContent = user.username;
-          row.insertCell(3).textContent = user.tipo;
-          row.insertCell(4).textContent = user.area || 'N/A';
-          const actionCell = row.insertCell(5);
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = 'Excluir';
-          deleteBtn.onclick = () => deleteUser(index);
-          actionCell.appendChild(deleteBtn);
-        });
-      };
-
-      const deleteUser = (index) => {
-        if (confirm('Deseja excluir este usuário?')) {
-          const users = loadUsers();
-          const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
-          deletedUsers.push(users[index].username);
-          saveDeletedUsers(deletedUsers);
-          users.splice(index, 1);
-          saveUsers(users);
-          displayUsers();
-        }
-      };
-
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const fullName = document.getElementById('full-name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const confirmPassword = document.getElementById('confirm-password').value.trim();
-        const area = document.getElementById('area').value || null;
-        const tipo = area ? 'Operador' : 'Gerenciador';
-
-        if (!fullName || !email || !username || !password || !confirmPassword) {
-          alert('Todos os campos são obrigatórios, exceto área.');
-          return;
-        }
-        if (password !== confirmPassword) {
-          alert('As senhas não coincidem.');
-          return;
-        }
-        if (loadUsers().some(u => u.username === username)) {
-          alert('Login já existe.');
-          return;
-        }
-
-        const newUser = { nomeCompleto: fullName, email, username, password, tipo, area };
-        const users = loadUsers();
-        users.push(newUser);
-        saveUsers(users);
-
-        redirectOptions.style.display = 'block';
-        const redirectTo = redirectSelect.value || 'home';
-        if (redirectTo === 'home') {
-          window.location.href = 'admin-home.html';
-        } else {
-          form.reset();
-          areaSelect.value = '';
-        }
+    const displayUsers = () => {
+      const users = loadUsers();
+      const tableBody = document.getElementById('users-table-body');
+      tableBody.innerHTML = '';
+      users.forEach((user, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${user.username}</td>
+          <td>${user.nomeCompleto}</td>
+          <td>${user.email}</td>
+          <td>${user.tipo}</td>
+          <td>
+            <button class="edit-btn" onclick="openModal(${index})">Editar</button>
+            <button class="delete-btn" onclick="deleteUser(${index})">Excluir</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
       });
+    };
 
-      populateAreas();
+    let editingIndex = null;
+
+    const openModal = (index) => {
+      editingIndex = index;
+      const users = loadUsers();
+      const user = users[index];
+      document.getElementById('modal-title').textContent = 'Editar Usuário';
+      document.getElementById('username').value = user.username;
+      document.getElementById('nomeCompleto').value = user.nomeCompleto;
+      document.getElementById('email').value = user.email;
+      document.getElementById('tipo').value = user.tipo;
+      document.getElementById('user-modal').style.display = 'block';
+    };
+
+    const closeModal = () => {
+      document.getElementById('user-modal').style.display = 'none';
+      editingIndex = null;
+    };
+
+    const deleteUser = (index) => {
+      if (confirm('Deseja excluir este usuário?')) {
+        const users = loadUsers();
+        users.splice(index, 1);
+        localStorage.setItem('users', JSON.stringify(users));
+        displayUsers();
+      }
+    };
+
+    document.getElementById('user-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const users = loadUsers();
+      const username = document.getElementById('username').value;
+      const nomeCompleto = document.getElementById('nomeCompleto').value;
+      const email = document.getElementById('email').value;
+      const tipo = document.getElementById('tipo').value;
+
+      users[editingIndex] = { ...users[editingIndex], username, nomeCompleto, email, tipo };
+      localStorage.setItem('users', JSON.stringify(users));
       displayUsers();
-      window.toggleSidebar = toggleSidebar;
+      closeModal();
     });
+
+    const showSidebar = () => {
+      document.getElementById('sidebar').classList.add('show');
+    };
+
+    const hideSidebar = () => {
+      document.getElementById('sidebar').classList.remove('show');
+    };
+
+    const logout = () => {
+      localStorage.removeItem('loggedUser');
+      window.location.href = '/login.html';
+    };
+
+    displayUsers();
   </script>
 </body>
 </html>
