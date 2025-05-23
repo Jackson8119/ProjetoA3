@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Administrador - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #F5F7FA;
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background-color: rgba(68, 68, 68, 0.9);
+      padding: 20px 0;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar.active {
+      left: 0;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      padding: 15px 20px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover {
+      color: #FFA500;
+    }
+    .sidebar .profile {
+      margin-top: auto;
+      padding: 15px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1001;
+      font-size: 18px;
+    }
+    .toggle-btn:hover {
+      background-color: #A52A2A;
+    }
+    .content {
+      margin-left: 0;
+      padding: 60px 30px;
+      transition: margin-left 0.3s ease;
+    }
+    .content.shifted {
+      margin-left: 250px;
+    }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .kpi-card {
+      background-color: #FFFFFF;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .kpi-card h3 {
+      font-size: 14px;
+      color: #666;
+      margin: 0 0 10px;
+    }
+    .kpi-card p {
+      font-size: 24px;
+      font-weight: 600;
+      color: #D32F2F;
+      margin: 0;
+    }
+    .func-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .func-card {
+      background-color: #FFFFFF;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .func-card:hover {
+      transform: translateY(-5px);
+    }
+    .func-card h4 {
+      font-size: 18px;
+      color: #333;
+      margin: 0 0 10px;
+    }
+    .func-card p {
+      font-size: 14px;
+      color: #666;
+      margin: 0;
+    }
+    .plans-section {
+      margin-top: 30px;
+    }
+    .plans-table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #FFFFFF;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .plans-table th, .plans-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #E0E0E0;
+    }
+    .plans-table th {
+      background-color: #F5F7FA;
+      color: #333;
+    }
+    .plans-table tr:hover {
+      background-color: #F5F7FA;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+  <nav class="sidebar" id="sidebar">
+    <ul>
+      <li><a href="admin-home.html">🏠 Home</a></li>
+      <li><a href="admin-users.html">👤 Usuários</a></li>
+      <li><a href="criar-area.html">📂 Áreas</a></li>
+      <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
+      <li><a href="#">📋 Planos (Visualizar)</a></li>
+    </ul>
+    <div class="profile"><a href="#">👤 Perfil</a></div>
+  </nav>
+  <div class="content" id="content">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <h3>Usuários Cadastrados</h3>
+        <p id="kpi-users">0</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Usuários Excluídos</h3>
+        <p id="kpi-deleted">0</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Áreas Cadastradas</h3>
+        <p id="kpi-areas">0</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Ativos Cadastrados</h3>
+        <p id="kpi-assets">0</p>
+      </div>
+      <div class="kpi-card">
+        <h3>Planos de Ação</h3>
+        <p id="kpi-plans">0</p>
+      </div>
+    </div>
+    <div class="func-cards">
+      <div class="func-card" onclick="window.location.href='admin-users.html'">
+        <h4>Gerenciar Usuários</h4>
+        <p>Cadastre e acompanhe usuários</p>
+      </div>
+      <div class="func-card" onclick="window.location.href='criar-area.html'">
+        <h4>Gerenciar Áreas</h4>
+        <p>Crie e exclua áreas</p>
+      </div>
+      <div class="func-card" onclick="window.location.href='criar-ativo.html'">
+        <h4>Gerenciar Ativos</h4>
+        <p>Crie e exclua ativos</p>
+      </div>
+      <div class="func-card" onclick="window.location.href='#'">
+        <h4>Visualizar Planos</h4>
+        <p>Veja os planos de ação</p>
+      </div>
+    </div>
+    <div class="plans-section">
+      <h3>Planos de Ação Recentes</h3>
+      <table class="plans-table" id="plans-table">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Área Responsável</th>
+            <th>Data de Criação</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      const kpiUsers = document.getElementById('kpi-users');
+      const kpiDeleted = document.getElementById('kpi-deleted');
+      const kpiAreas = document.getElementById('kpi-areas');
+      const kpiAssets = document.getElementById('kpi-assets');
+      const kpiPlans = document.getElementById('kpi-plans');
+      const plansTable = document.getElementById('plans-table').getElementsByTagName('tbody')[0];
+
+      const toggleSidebar = () => {
+        sidebar.classList.toggle('active');
+        content.classList.toggle('shifted');
+      };
+
+      const loadData = () => {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+        const areas = JSON.parse(localStorage.getItem('areas') || '[]');
+        const ativos = JSON.parse(localStorage.getItem('ativos') || '[]');
+        const planos = JSON.parse(localStorage.getItem('planos') || '[]');
+
+        kpiUsers.textContent = users.length;
+        kpiDeleted.textContent = deletedUsers.length;
+        kpiAreas.textContent = areas.length;
+        kpiAssets.textContent = ativos.length;
+        kpiPlans.textContent = planos.length;
+
+        plansTable.innerHTML = '';
+        planos.slice(0, 5).forEach(plano => {
+          const row = plansTable.insertRow();
+          row.insertCell(0).textContent = plano.titulo || 'Sem Título';
+          row.insertCell(1).textContent = plano.areaResponsavel || 'Não definido';
+          row.insertCell(2).textContent = plano.dataCriacao || 'Não definido';
+        });
+      };
+
+      loadData();
+      window.toggleSidebar = toggleSidebar;
+    });
+  </script>
+</body>
+</html>

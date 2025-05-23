@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usuários - Sistema de Gestão de Riscos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #F5F7FA;
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background-color: rgba(68, 68, 68, 0.9);
+      padding: 20px 0;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar.active {
+      left: 0;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .sidebar li {
+      padding: 15px 20px;
+    }
+    .sidebar a {
+      color: #FFFFFF;
+      text-decoration: none;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar a:hover {
+      color: #FFA500;
+    }
+    .sidebar .profile {
+      margin-top: auto;
+      padding: 15px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1001;
+      font-size: 18px;
+    }
+    .toggle-btn:hover {
+      background-color: #A52A2A;
+    }
+    .content {
+      margin-left: 0;
+      padding: 60px 30px;
+      transition: margin-left 0.3s ease;
+    }
+    .content.shifted {
+      margin-left: 250px;
+    }
+    .user-form, .users-table {
+      background-color: #FFFFFF;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .user-form h3, .users-table h3 {
+      font-size: 20px;
+      color: #333;
+      margin: 0 0 15px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+    .form-actions button {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    .form-actions button:hover {
+      background-color: #A52A2A;
+    }
+    .users-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .users-table th, .users-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #E0E0E0;
+    }
+    .users-table th {
+      background-color: #F5F7FA;
+      color: #333;
+    }
+    .users-table td button {
+      background-color: #D32F2F;
+      color: #FFFFFF;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .users-table td button:hover {
+      background-color: #A52A2A;
+    }
+    .redirect-options {
+      margin-top: 15px;
+      display: none;
+    }
+    .redirect-options select {
+      padding: 10px;
+      border: 1px solid #E0E0E0;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+  <nav class="sidebar" id="sidebar">
+    <ul>
+      <li><a href="admin-home.html">🏠 Home</a></li>
+      <li><a href="admin-users.html">👤 Usuários</a></li>
+      <li><a href="criar-area.html">📂 Áreas</a></li>
+      <li><a href="criar-ativo.html">🛠️ Ativos</a></li>
+      <li><a href="#">📋 Planos (Visualizar)</a></li>
+    </ul>
+    <div class="profile"><a href="#">👤 Perfil</a></div>
+  </nav>
+  <div class="content" id="content">
+    <div class="user-form">
+      <h3>Cadastrar Novo Usuário</h3>
+      <form id="user-form">
+        <div class="form-group">
+          <label for="full-name">Nome Completo:</label>
+          <input type="text" id="full-name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="username">Login:</label>
+          <input type="text" id="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Senha:</label>
+          <input type="password" id="password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">Confirmação de Senha:</label>
+          <input type="password" id="confirm-password" required>
+        </div>
+        <div class="form-group">
+          <label for="area">Área de Atuação (Opcional para Gerenciador):</label>
+          <select id="area">
+            <option value="">Não aplicável</option>
+            <!-- Áreas preenchidas via JS -->
+          </select>
+        </div>
+        <div class="form-actions">
+          <button type="submit">Cadastrar</button>
+        </div>
+      </form>
+      <div class="redirect-options" id="redirect-options">
+        <label>Redirecionar para:</label>
+        <select id="redirect-select">
+          <option value="home">Home</option>
+          <option value="new">Novo Cadastro</option>
+        </select>
+      </div>
+    </div>
+    <div class="users-table">
+      <h3>Usuários Cadastrados</h3>
+      <table id="users-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Login</th>
+            <th>Tipo</th>
+            <th>Área</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      const form = document.getElementById('user-form');
+      const redirectOptions = document.getElementById('redirect-options');
+      const redirectSelect = document.getElementById('redirect-select');
+      const areaSelect = document.getElementById('area');
+      const usersTable = document.getElementById('users-table').getElementsByTagName('tbody')[0];
+
+      const toggleSidebar = () => {
+        sidebar.classList.toggle('active');
+        content.classList.toggle('shifted');
+      };
+
+      const loadAreas = () => JSON.parse(localStorage.getItem('areas') || '[]');
+      const loadUsers = () => JSON.parse(localStorage.getItem('users') || '[]');
+      const saveUsers = (users) => localStorage.setItem('users', JSON.stringify(users));
+      const saveDeletedUsers = (deleted) => localStorage.setItem('deletedUsers', JSON.stringify(deleted));
+
+      const populateAreas = () => {
+        const areas = loadAreas();
+        areaSelect.innerHTML = '<option value="">Não aplicável</option>';
+        areas.forEach(area => {
+          const option = document.createElement('option');
+          option.value = area;
+          option.textContent = area;
+          areaSelect.appendChild(option);
+        });
+      };
+
+      const displayUsers = () => {
+        const users = loadUsers();
+        usersTable.innerHTML = '';
+        users.forEach((user, index) => {
+          const row = usersTable.insertRow();
+          row.insertCell(0).textContent = user.nomeCompleto;
+          row.insertCell(1).textContent = user.email;
+          row.insertCell(2).textContent = user.username;
+          row.insertCell(3).textContent = user.tipo;
+          row.insertCell(4).textContent = user.area || 'N/A';
+          const actionCell = row.insertCell(5);
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Excluir';
+          deleteBtn.onclick = () => deleteUser(index);
+          actionCell.appendChild(deleteBtn);
+        });
+      };
+
+      const deleteUser = (index) => {
+        if (confirm('Deseja excluir este usuário?')) {
+          const users = loadUsers();
+          const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+          deletedUsers.push(users[index].username);
+          saveDeletedUsers(deletedUsers);
+          users.splice(index, 1);
+          saveUsers(users);
+          displayUsers();
+        }
+      };
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const fullName = document.getElementById('full-name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirm-password').value.trim();
+        const area = document.getElementById('area').value || null;
+        const tipo = area ? 'Operador' : 'Gerenciador';
+
+        if (!fullName || !email || !username || !password || !confirmPassword) {
+          alert('Todos os campos são obrigatórios, exceto área.');
+          return;
+        }
+        if (password !== confirmPassword) {
+          alert('As senhas não coincidem.');
+          return;
+        }
+        if (loadUsers().some(u => u.username === username)) {
+          alert('Login já existe.');
+          return;
+        }
+
+        const newUser = { nomeCompleto: fullName, email, username, password, tipo, area };
+        const users = loadUsers();
+        users.push(newUser);
+        saveUsers(users);
+
+        redirectOptions.style.display = 'block';
+        const redirectTo = redirectSelect.value || 'home';
+        if (redirectTo === 'home') {
+          window.location.href = 'admin-home.html';
+        } else {
+          form.reset();
+          areaSelect.value = '';
+        }
+      });
+
+      populateAreas();
+      displayUsers();
+      window.toggleSidebar = toggleSidebar;
+    });
+  </script>
+</body>
+</html>
