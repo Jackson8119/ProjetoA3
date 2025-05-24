@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <base href="/">
-  <title>Gerenciamento de Ativos</title>
+  <title>Gerenciamento de Áreas</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/ativo.css">
+  <link rel="stylesheet" href="/assets/css/area.css">
 </head>
 <body>
   <header>
@@ -26,8 +26,8 @@
       <ul>
         <li><a href="/pages/admin/admin-home.html" data-section="inicio"><span class="icon">🏠</span><span class="label">Início</span></a></li>
         <li><a href="/pages/admin/admin-users.html" data-section="usuarios"><span class="icon">👥</span><span class="label">Usuários</span></a></li>
-        <li><a href="/pages/admin/admin-areas.html" data-section="areas"><span class="icon">🏢</span><span class="label">Áreas</span></a></li>
-        <li><a href="/pages/admin/admin-ativos.html" class="active" data-section="ativos"><span class="icon">⚙️</span><span class="label">Ativos</span></a></li>
+        <li><a href="/pages/admin/admin-areas.html" class="active" data-section="areas"><span class="icon">🏢</span><span class="label">Áreas</span></a></li>
+        <li><a href="/pages/admin/admin-ativos.html" data-section="ativos"><span class="icon">⚙️</span><span class="label">Ativos</span></a></li>
         <li><a href="#" data-section="planos-acao"><span class="icon">📅</span><span class="label">Planos de ação</span></a></li>
         <li class="footer-item"><a href="#" data-section="perfil"><span class="icon">👤</span><span class="label">Perfil</span></a></li>
       </ul>
@@ -36,40 +36,34 @@
       <div class="error-message" id="error-message" style="color: #d32f2f; text-align: center; display: none;">Dashboard não implementado para este tipo de usuário.</div>
       <div class="header-section">
         <div class="title-bar">
-          <h2>Gerenciamento de Ativos</h2>
-          <button class="new-ativo-btn" onclick="openModal('new')">
-            <span>+</span> Novo Ativo
+          <h2>Gerenciamento de Áreas</h2>
+          <button class="new-area-btn" onclick="openModal('new')">
+            <span>+</span> Nova Área
           </button>
         </div>
-        <div class="subtitle">Cadastre e gerencie ativos do sistema</div>
+        <div class="subtitle">Cadastre e gerencie áreas do sistema</div>
       </div>
       <div class="header-bar">
         <div class="search-bar">
           <span class="search-icon" onclick="toggleSearch()">🔍</span>
-          <input type="text" id="search-input" placeholder="Buscar por nome, descrição ou área..." aria-label="Buscar ativos">
+          <input type="text" id="search-input" placeholder="Buscar por nome da área..." aria-label="Buscar áreas">
         </div>
       </div>
       <div id="message" class="message"></div>
-      <div class="ativos-grid" id="ativos-grid">
-        <!-- Ativos serão preenchidos via JS -->
+      <div class="areas-grid" id="areas-grid">
+        <!-- Áreas serão preenchidas via JS -->
       </div>
-      <div class="modal" id="ativo-modal">
+      <div class="modal" id="area-modal">
         <div class="modal-content">
-          <h3 id="modal-title">Cadastrar Novo Ativo</h3>
-          <form id="ativo-form">
+          <h3 id="modal-title">Cadastrar Nova Área</h3>
+          <form id="area-form">
             <div class="form-group">
-              <label for="ativo-nome">Nome do Ativo:</label>
-              <input type="text" id="ativo-nome" name="ativo-nome" required>
+              <label for="area-nome">Nome da Área:</label>
+              <input type="text" id="area-nome" name="area-nome" required>
             </div>
             <div class="form-group">
-              <label for="ativo-descricao">Descrição:</label>
-              <textarea id="ativo-descricao" name="ativo-descricao" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="ativo-area">Área Responsável:</label>
-              <select id="ativo-area" name="ativo-area" required>
-                <option value="" disabled selected>Selecione uma área</option>
-              </select>
+              <label for="area-descricao">Descrição:</label>
+              <textarea id="area-descricao" name="area-descricao" rows="3"></textarea>
             </div>
             <div class="modal-actions">
               <button type="submit" class="save-btn">Salvar</button>
@@ -80,7 +74,7 @@
       </div>
     </main>
   </div>
-  <script src="/assets/js/ativo.js"></script>
+  <script src="/assets/js/area.js"></script>
   <script>
     const toggleSidebar = () => {
       const sidebar = document.getElementById('sidebar');

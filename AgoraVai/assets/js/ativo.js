@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     areaSelect.innerHTML = '<option value="" disabled selected>Selecione uma área</option>';
     areas.forEach(area => {
       const option = document.createElement('option');
-      option.value = area;
-      option.textContent = area;
+      option.value = area.nome;
+      option.textContent = area.nome;
       areaSelect.appendChild(option);
     });
   };
@@ -86,7 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Inicializar dados, se necessário
   if (!localStorage.getItem('areas')) {
-    localStorage.setItem('areas', JSON.stringify(['TI', 'Produção']));
+    localStorage.setItem('areas', JSON.stringify([
+      { nome: 'TI', descricao: 'Departamento de Tecnologia da Informação' },
+      { nome: 'Produção', descricao: 'Linha de produção industrial' }
+    ]));
   }
   if (!localStorage.getItem('ativos')) {
     localStorage.setItem('ativos', JSON.stringify([
@@ -101,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
     editingIndex = mode === 'edit' ? index : null;
     modalTitle.textContent = mode === 'edit' ? 'Editar Ativo' : 'Cadastrar Novo Ativo';
     form.reset();
+    areaSelect.disabled = false;
     if (mode === 'edit') {
       const ativos = loadAtivos();
       document.getElementById('ativo-nome').value = ativos[index].nome;
@@ -114,6 +118,18 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.style.display = 'none';
     form.reset();
     editingIndex = null;
+    const newArea = localStorage.getItem('newArea');
+    if (newArea) {
+      const areas = loadAreas();
+      const index = areas.findIndex(area => area.nome === newArea);
+      if (index !== -1) {
+        areas.splice(index, 1);
+        localStorage.setItem('areas', JSON.stringify(areas));
+        console.log('Área excluída por cancelamento:', newArea);
+      }
+      localStorage.removeItem('newArea');
+    }
+    areaSelect.disabled = false;
   };
 
   // Deletar ativo
@@ -167,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ativos.push(novoAtivo);
       console.log('Novo ativo criado:', novoAtivo);
       showMessage('Ativo criado com sucesso!', 'success');
+      localStorage.removeItem('newArea');
     } else {
       ativos[editingIndex] = {
         ...ativos[editingIndex],
@@ -202,7 +219,17 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = '/pages/admin/admin-home.html';
   };
 
+  // Verificar redirecionamento de nova área
+  const newArea = localStorage.getItem('newArea');
+  if (newArea) {
+    populateAreas();
+    openModal('new');
+    areaSelect.value = newArea;
+    areaSelect.disabled = true;
+  } else {
+    populateAreas();
+  }
+
   // Inicializar
-  populateAreas();
   displayAtivos();
 });
