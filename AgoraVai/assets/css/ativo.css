@@ -73,6 +73,20 @@ h1 {
   background-color: #ff5722;
 }
 
+.navbar-right .dashboard-btn {
+  background-color: #ff3d00;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.navbar-right .dashboard-btn:hover {
+  background-color: #ff5722;
+}
+
 .menu-toggle {
   position: fixed;
   top: 95px;
