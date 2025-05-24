@@ -73,7 +73,7 @@ h1 {
 
 .menu-toggle {
   position: fixed;
-  top: 80px; /* Alinhado com o título do card (.title-bar) */
+  top: 80px; /* Alinhado com o título do card */
   left: 20px;
   font-size: 24px;
   cursor: pointer;
@@ -94,9 +94,9 @@ h1 {
   position: fixed;
   z-index: 2000;
   left: 0;
-  top: 60px;
+  top: 110px; /* Abaixo do menu-toggle */
   bottom: 0;
-  height: auto;
+  height: calc(100vh - 110px); /* Ajustado para começar abaixo do menu-toggle */
   transform: translateX(-100%);
   opacity: 0;
   transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease;
@@ -201,7 +201,7 @@ main {
 }
 
 .header-section {
-  margin-top: 10px; /* Reduzido para alinhar com menu-toggle */
+  margin-top: 10px;
   text-align: center;
 }
 

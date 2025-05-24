@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Verificar se o usuário é administrador
-  const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
-  if (!loggedUser || loggedUser.tipo !== 'Administrador') {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (!currentUser || currentUser.tipo !== 'Administrador') {
     console.log('Usuário não é administrador ou não está logado. Redirecionando para login...');
-    window.location.href = '/login.html';
+    window.location.href = '/pages/login.html';
     return;
   }
 
@@ -99,6 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.style.display = 'block';
   };
 
+  // Funções do modal
   window.closeModal = () => {
     modal.style.display = 'none';
     form.reset();
@@ -182,8 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Função de logout
   window.logout = () => {
     console.log('Executando logout...');
-    localStorage.removeItem('loggedUser');
-    window.location.href = '/pages/admin/admin-home.html';
+    localStorage.removeItem('currentUser');
+    window.location.href = '/pages/login.html';
   };
 
   // Inicializar

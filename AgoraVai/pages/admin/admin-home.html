@@ -3,172 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home - Gestão de Incidentes</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-    }
-    header {
-      background-color: #d32f2f;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-    }
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .menu-toggle {
-      font-size: 24px;
-      cursor: pointer;
-    }
-    h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-    .user-role {
-      background-color: #ff5252;
-      padding: 5px 10px;
-      border-radius: 5px;
-    }
-    .sidebar {
-      width: 200px;
-      background-color: #444;
-      position: fixed;
-      top: 60px;
-      left: 0;
-      height: calc(100vh - 60px);
-      padding-top: 20px;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .sidebar.show {
-      opacity: 1;
-      visibility: visible;
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-    .sidebar ul li {
-      padding: 10px 20px;
-    }
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-    }
-    .sidebar ul li a:hover {
-      color: #ffa500;
-    }
-    main {
-      margin-left: 0;
-      padding: 20px;
-      padding-top: 80px;
-      transition: margin-left 0.3s ease;
-    }
-    .welcome-message {
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-    .error-message {
-      color: #d32f2f;
-      text-align: center;
-      display: none;
-    }
-  </style>
+  <base href="/">
+  <title>Dashboard - Administrador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/user-create.css">
 </head>
 <body>
   <header>
     <div class="navbar">
-      <div class="navbar-left">
-        <span class="menu-toggle" onmouseover="showSidebar()" onmouseout="hideSidebar()">☰</span>
+      <div class="navbar-center">
+        <span class="alert-icon">⚠</span>
+        <h1>Dashboard - Administrador</h1>
       </div>
-      <h1>Gestão de Incidentes</h1>
       <div class="navbar-right">
-        <span class="user-role">Administrador</span>
+        <button class="logout-btn" onclick="logout()">Sair</button>
       </div>
     </div>
   </header>
+  <span class="menu-toggle" onclick="toggleSidebar()">☰</span>
   <div class="container">
-    <nav class="sidebar" id="sidebar" onmouseover="showSidebar()" onmouseout="hideSidebar()">
+    <nav class="sidebar" id="sidebar">
       <ul>
-        <li><a href="/pages/admin/admin-home.html">Home</a></li>
-        <li><a href="/pages/admin/admin-users.html">Usuários</a></li>
-        <li><a href="/pages/criar-area.html">Áreas</a></li>
-        <li><a href="/pages/admin/admin-ativos.html">Ativos</a></li>
-        <li><a href="#">Planos (Visualizar)</a></li>
-        <li><a href="/perfil.html">Perfil</a></li>
-        <li><a href="/login.html" onclick="logout()">Sair</a></li>
+        <li><a href="/pages/admin/admin-home.html" data-section="inicio" class="active"><span class="icon">🏠</span><span class="label">Início</span></a></li>
+        <li class="has-submenu">
+          <a href="#" data-section="usuarios" onclick="toggleSubmenu(event)"><span class="icon">👥</span><span class="label">Usuários</span></a>
+          <ul class="submenu" style="display: none;">
+            <li><a href="/pages/admin/admin-users-create.html" data-section="cadastrar"><span class="icon">➕</span>Cadastrar</a></li>
+            <li><a href="/pages/admin/admin-users.html" data-section="administrar"><span class="icon">⚙️</span>Administrar</a></li>
+          </ul>
+        </li>
+        <li><a href="/pages/admin/admin-areas.html" data-section="areas"><span class="icon">🏢</span><span class="label">Áreas</span></a></li>
+        <li><a href="/pages/admin/admin-ativos.html" data-section="ativos"><span class="icon">⚙️</span><span class="label">Ativos</span></a></li>
+        <li><a href="#" data-section="planos-acao"><span class="icon">📅</span><span class="label">Planos de ação</span></a></li>
+        <li class="footer-item"><a href="#" data-section="perfil"><span class="icon">👤</span><span class="label">Perfil</span></a></li>
       </ul>
     </nav>
     <main>
-      <div class="welcome-message" id="welcome-message"></div>
-      <div class="error-message" id="error-message">Dashboard não implementado para este tipo de usuário.</div>
-      <h2>Áreas Cadastradas</h2>
-      <div id="areas-list"></div>
+      <div class="header-section">
+        <div class="title-bar">
+          <h2>Bem-vindo ao Dashboard</h2>
+        </div>
+        <div class="subtitle">Gerencie usuários, áreas, ativos e planos de ação.</div>
+      </div>
+      <div class="dashboard-content">
+        <p>Selecione uma opção no menu lateral para começar.</p>
+      </div>
     </main>
   </div>
+  <script src="/assets/js/admin-home.js"></script>
   <script>
-    const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
-    const welcomeMessage = document.getElementById('welcome-message');
-    const errorMessage = document.getElementById('error-message');
-
-    if (loggedUser && loggedUser.tipo === 'Administrador') {
-      welcomeMessage.textContent = `Bem-vindo(a), ${loggedUser.nomeCompleto || loggedUser.username}!`;
-      errorMessage.style.display = 'none';
-    } else {
-      errorMessage.style.display = 'block';
-      setTimeout(() => {
-        window.location.href = '/login.html';
-      }, 2000);
-    }
-
-    const loadAreas = () => {
-      const areas = localStorage.getItem('areas');
-      return areas ? JSON.parse(areas) : [];
+    const toggleSidebar = () => {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('show');
     };
 
-    const displayAreas = () => {
-      const areas = loadAreas();
-      const areasList = document.getElementById('areas-list');
-      areasList.innerHTML = '';
-      if (areas.length === 0) {
-        areasList.innerHTML = '<p>Nenhuma área cadastrada.</p>';
-        return;
-      }
-      areas.forEach(area => {
-        const div = document.createElement('div');
-        div.textContent = area;
-        div.style.padding = '10px';
-        div.style.borderBottom = '1px solid #ddd';
-        areasList.appendChild(div);
-      });
+    const toggleSubmenu = (event) => {
+      event.preventDefault();
+      const submenu = event.target.closest('a').nextElementSibling;
+      submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
     };
-
-    const showSidebar = () => {
-      document.getElementById('sidebar').classList.add('show');
-    };
-
-    const hideSidebar = () => {
-      document.getElementById('sidebar').classList.remove('show');
-    };
-
-    const logout = () => {
-      localStorage.removeItem('loggedUser');
-      window.location.href = '/login.html';
-    };
-
-    displayAreas();
   </script>
 </body>
 </html>

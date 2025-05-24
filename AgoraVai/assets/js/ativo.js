@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Verificar se há um usuário logado
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  if (!currentUser || currentUser.tipo !== 'Administrador') {
+    window.location.href = '/pages/login.html';
+    return;
+  }
+
   const form = document.getElementById('ativo-form');
   const message = document.getElementById('message');
   const ativosGrid = document.getElementById('ativos-grid');
@@ -11,14 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Verificar elementos DOM
   if (!form || !message || !ativosGrid || !areaSelect || !searchInput || !modal || !modalTitle) {
     console.error('Erro: Um ou mais elementos DOM não foram encontrados.');
-    return;
-  }
-
-  // Verificar se o usuário é administrador
-  const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
-  if (!loggedUser || loggedUser.tipo !== 'Administrador') {
-    console.log('Usuário não é administrador ou não está logado. Redirecionando para login...');
-    window.location.href = '/login.html';
     return;
   }
 
@@ -39,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     areaSelect.innerHTML = '<option value="" disabled selected>Selecione uma área</option>';
     areas.forEach(area => {
       const option = document.createElement('option');
-      option.value = area.nome;
-      option.textContent = area.nome;
+      option.value = area.name || area.nome; // Compatível com ambos os formatos
+      option.textContent = area.name || area.nome;
       areaSelect.appendChild(option);
     });
   };
@@ -87,8 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Inicializar dados, se necessário
   if (!localStorage.getItem('areas')) {
     localStorage.setItem('areas', JSON.stringify([
-      { nome: 'TI', descricao: 'Departamento de Tecnologia da Informação' },
-      { nome: 'Produção', descricao: 'Linha de produção industrial' }
+      { name: 'TI', descricao: 'Departamento de Tecnologia da Informação' },
+      { name: 'Produção', descricao: 'Linha de produção industrial' }
     ]));
   }
   if (!localStorage.getItem('ativos')) {
@@ -121,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newArea = localStorage.getItem('newArea');
     if (newArea) {
       const areas = loadAreas();
-      const index = areas.findIndex(area => area.nome === newArea);
+      const index = areas.findIndex(area => (area.name || area.nome) === newArea);
       if (index !== -1) {
         areas.splice(index, 1);
         localStorage.setItem('areas', JSON.stringify(areas));
@@ -129,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       localStorage.removeItem('newArea');
     }
-    areaSelect.disabled = false;
   };
 
   // Deletar ativo
@@ -214,9 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Função de logout
   window.logout = () => {
-    console.log('Executando logout...');
-    localStorage.removeItem('loggedUser');
-    window.location.href = '/pages/admin/admin-home.html';
+    localStorage.removeItem('currentUser');
+    window.location.href = '/pages/login.html';
   };
 
   // Verificar redirecionamento de nova área

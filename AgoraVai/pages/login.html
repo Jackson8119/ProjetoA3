@@ -3,121 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Gestão de Incidentes</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f5f5f5;
-    }
-    .login-container {
-      background-color: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      width: 300px;
-      text-align: center;
-    }
-    .login-container h2 {
-      margin-top: 0;
-    }
-    .form-group {
-      margin-bottom: 15px;
-      text-align: left;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-    .login-btn {
-      width: 100%;
-      padding: 10px;
-      background-color: #d32f2f;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .login-btn:hover {
-      background-color: #ff5252;
-    }
-    .error-message {
-      color: #d32f2f;
-      margin-top: 10px;
-      display: none;
-    }
-  </style>
+  <base href="/">
+  <title>Login - AgoraVai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/login.css">
 </head>
 <body>
   <div class="login-container">
-    <h2>Login</h2>
+    <h1>AgoraVai</h1>
     <form id="login-form">
       <div class="form-group">
-        <label for="username">Usuário:</label>
-        <input type="text" id="username" name="username" required>
+        <label for="username">Usuário</label>
+        <input type="text" id="username" placeholder="Digite seu login" required>
       </div>
       <div class="form-group">
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required>
+        <label for="password">Senha</label>
+        <input type="password" id="password" placeholder="Digite sua senha" required>
       </div>
-      <button type="submit" class="login-btn">Entrar</button>
+      <button type="submit">Entrar</button>
     </form>
-    <div class="error-message" id="error-message">Usuário ou senha incorretos.</div>
+    <div id="error-message" class="message"></div>
   </div>
-  <script>
-    // Dados de usuários pré-cadastrados (simulando um banco de dados)
-    const users = [
-      { username: 'admin', password: 'admin123', tipo: 'Administrador', nomeCompleto: 'Admin Teste', email: 'admin@exemplo.com' },
-      { username: 'user', password: 'user123', tipo: 'Usuário', nomeCompleto: 'User Teste', email: 'user@exemplo.com' }
-    ];
-
-    // Armazenar usuários no localStorage se ainda não existirem
-    if (!localStorage.getItem('users')) {
-      localStorage.setItem('users', JSON.stringify(users));
-    }
-
-    document.getElementById('login-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const errorMessage = document.getElementById('error-message');
-
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      const user = users.find(u => u.username === username && u.password === password);
-
-      if (user) {
-        console.log('Usuário encontrado:', user);
-        localStorage.setItem('loggedUser', JSON.stringify(user));
-        if (user.tipo === 'Administrador') {
-          console.log('Redirecionando administrador para /pages/admin/admin-home.html');
-          window.location.href = '/pages/admin/admin-home.html';
-        } else {
-          console.log('Usuário não é administrador. Exibindo mensagem de erro.');
-          errorMessage.textContent = 'Dashboard não implementado para este tipo de usuário.';
-          errorMessage.style.display = 'block';
-          setTimeout(() => {
-            localStorage.removeItem('loggedUser');
-            window.location.href = '/login.html';
-          }, 2000);
-        }
-      } else {
-        console.log('Usuário ou senha incorretos:', { username, password });
-        errorMessage.textContent = 'Usuário ou senha incorretos.';
-        errorMessage.style.display = 'block';
-      }
-    });
-  </script>
+  <script src="/assets/js/login.js"></script>
 </body>
 </html>
