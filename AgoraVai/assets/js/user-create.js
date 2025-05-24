@@ -1,142 +1,179 @@
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('user-form');
   const message = document.getElementById('message');
-  const tipoSelect = document.getElementById('user-tipo');
+  const tipoUsuario = document.getElementById('user-tipo');
   const areaGroup = document.getElementById('area-group');
   const areaSelect = document.getElementById('user-area');
 
-  // Verificar elementos DOM
-  if (!form || !message || !tipoSelect || !areaGroup || !areaSelect) {
-    console.error('Erro: Um ou mais elementos DOM não foram encontrados.');
-    return;
-  }
-
-  // Verificar se o usuário é administrador
-  const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
-  if (!loggedUser || loggedUser.tipo !== 'Administrador') {
-    console.log('Usuário não é administrador ou não está logado. Redirecionando para login...');
-    window.location.href = '/login.html';
-    return;
-  }
-
-  // Carregar áreas e usuários do localStorage
+  // Carregar áreas no select
   const loadAreas = () => {
-    const areas = localStorage.getItem('areas');
-    return areas ? JSON.parse(areas) : [];
+    try {
+      const rawAreas = localStorage.getItem('areas');
+      console.log('Conteúdo bruto de localStorage.areas:', rawAreas);
+      
+      let areas = rawAreas ? JSON.parse(rawAreas) : [];
+      areaSelect.innerHTML = '<option value="" disabled selected>Selecione a área de atuação</option>';
+
+      if (!Array.isArray(areas)) {
+        console.warn('Áreas não são um array:', areas);
+        areas = [];
+      }
+
+      const normalizedAreas = areas.map(item => {
+        if (typeof item === 'string') {
+          return { name: item };
+        } else if (item && typeof item === 'object') {
+          return { name: item.name || item.area || Object.values(item)[0] };
+        }
+        return null;
+      }).filter(item => item && item.name);
+
+      if (normalizedAreas.length === 0) {
+        console.warn('Nenhuma área válida encontrada.');
+        areaSelect.innerHTML += '<option value="" disabled>Nenhuma área disponível</option>';
+        message.textContent = 'Nenhuma área cadastrada. Por favor, cadastre áreas em Administração de Áreas.';
+        message.className = 'message error';
+        message.style.display = 'block';
+        return;
+      }
+
+      normalizedAreas.forEach(area => {
+        const option = document.createElement('option');
+        option.value = area.name;
+        option.textContent = area.name;
+        areaSelect.appendChild(option);
+      });
+      console.log('Áreas normalizadas carregadas:', normalizedAreas);
+    } catch (error) {
+      console.error('Erro ao carregar áreas:', error);
+      areaSelect.innerHTML = '<option value="" disabled>Erro ao carregar áreas</option>';
+      message.textContent = 'Erro ao carregar áreas. Verifique o console para detalhes.';
+      message.className = 'message error';
+      message.style.display = 'block';
+    }
   };
 
-  const loadUsers = () => {
-    const users = localStorage.getItem('users');
-    return users ? JSON.parse(users) : [];
-  };
-
-  // Preencher dropdown de áreas
-  const populateAreas = () => {
-    const areas = loadAreas();
-    areaSelect.innerHTML = '<option value="" disabled selected>Selecione uma área</option>';
-    areas.forEach(area => {
-      const option = document.createElement('option');
-      option.value = area.nome;
-      option.textContent = area.nome;
-      areaSelect.appendChild(option);
-    });
-  };
-
-  // Mostrar/esconder campo de área baseado no tipo de usuário
-  tipoSelect.addEventListener('change', () => {
-    if (tipoSelect.value === 'Operador') {
-      areaGroup.style.display = 'block';
-      areaSelect.setAttribute('required', 'required');
-    } else {
-      areaGroup.style.display = 'none';
-      areaSelect.removeAttribute('required');
+  // Mostrar/esconder campo de área com base no tipo de usuário
+  tipoUsuario.addEventListener('change', () => {
+    areaGroup.style.display = tipoUsuario.value === 'Operador' ? 'block' : 'none';
+    if (tipoUsuario.value === 'Operador') {
+      loadAreas();
     }
   });
 
-  // Função para exibir mensagens
-  const showMessage = (text, type) => {
-    message.textContent = text;
-    message.className = `message ${type}`;
-    message.style.display = 'block';
-    setTimeout(() => {
-      message.style.display = 'none';
-    }, 2000);
+  // Alternar visibilidade da senha
+  window.togglePassword = (fieldId) => {
+    const field = document.getElementById(fieldId);
+    const icon = field.nextElementSibling;
+    if (field.type === 'password') {
+      field.type = 'text';
+      icon.textContent = '🙈';
+    } else {
+      field.type = 'password';
+      icon.textContent = '👁️';
+    }
   };
 
-  // Manipular envio do formulário
+  // Validar e enviar formulário
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    console.log('Formulário submetido');
 
     const nome = document.getElementById('user-nome').value.trim();
-    const login = document.getElementById('user-login').value.trim();
     const email = document.getElementById('user-email').value.trim();
-    const tipo = document.getElementById('user-tipo').value;
-    const area = tipo === 'Operador' ? document.getElementById('user-area').value : '';
+    const login = document.getElementById('user-login').value.trim();
+    const tipo = tipoUsuario.value;
+    const area = tipo === 'Operador' ? areaSelect.value : '';
     const senha = document.getElementById('user-senha').value;
     const confirmarSenha = document.getElementById('user-confirmar-senha').value;
 
+    console.log('Dados do formulário:', { nome, email, login, tipo, area, senha, confirmarSenha });
+
     // Validações
-    if (!nome || !login || !email || !tipo || !senha || !confirmarSenha || (tipo === 'Operador' && !area)) {
-      showMessage('Erro: Todos os campos obrigatórios devem ser preenchidos.', 'error');
+    if (!nome || !email || !login || !tipo || !senha || !confirmarSenha || (tipo === 'Operador' && !area)) {
+      message.textContent = 'Por favor, preencha todos os campos obrigatórios.';
+      message.className = 'message error';
+      message.style.display = 'block';
+      return;
+    }
+
+    if (nome === '' || email === '' || login === '') {
+      message.textContent = 'Nome, email e login não podem ser vazios.';
+      message.className = 'message error';
+      message.style.display = 'block';
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      message.textContent = 'Por favor, insira um email válido.';
+      message.className = 'message error';
+      message.style.display = 'block';
       return;
     }
 
     if (senha !== confirmarSenha) {
-      showMessage('Erro: As senhas não coincidem.', 'error');
+      message.textContent = 'As senhas não coincidem.';
+      message.className = 'message error';
+      message.style.display = 'block';
       return;
     }
 
-    const users = loadUsers();
-    if (users.some(user => user.login === login)) {
-      showMessage('Erro: Login já está em uso.', 'error');
-      return;
-    }
+    // Salvar usuário no localStorage
+    try {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
 
-    if (users.some(user => user.email === email)) {
-      showMessage('Erro: Email já está em uso.', 'error');
-      return;
-    }
+      if (users.some(user => user.nome && user.nome.toLowerCase() === nome.toLowerCase())) {
+        message.textContent = 'Este nome já está em uso.';
+        message.className = 'message error';
+        message.style.display = 'block';
+        return;
+      }
 
-    // Criar novo usuário
-    const newUser = {
-      nome,
-      login,
-      email,
-      senha,
-      tipo,
-      area: tipo === 'Operador' ? area : null
-    };
+      if (users.some(user => user.email && user.email.toLowerCase() === email.toLowerCase())) {
+        message.textContent = 'Este email já está em uso.';
+        message.className = 'message error';
+        message.style.display = 'block';
+        return;
+      }
 
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-    showMessage('Usuário cadastrado com sucesso!', 'success');
+      if (users.some(user => user.login && user.login.toLowerCase() === login.toLowerCase())) {
+        message.textContent = 'Este login já está em uso.';
+        message.className = 'message error';
+        message.style.display = 'block';
+        return;
+      }
 
-    // Redirecionar após 2 segundos
-    setTimeout(() => {
+      const newUser = {
+        nome,
+        email,
+        login,
+        tipo,
+        area,
+        senha,
+        createdAt: new Date().toISOString()
+      };
+
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('lastRegisteredUser', login);
+      console.log('Usuário salvo. Lista de usuários:', users);
+
+      // Redirecionar para admin-users.html
       window.location.href = '/pages/admin/admin-users.html';
-    }, 2000);
+    } catch (error) {
+      console.error('Erro ao salvar usuário:', error);
+      message.textContent = 'Erro ao salvar usuário. Verifique o console.';
+      message.className = 'message error';
+      message.style.display = 'block';
+    }
   });
 
-  // Função para mostrar/esconder senha
-  window.togglePassword = (inputId) => {
-    const input = document.getElementById(inputId);
-    const toggle = input.nextElementSibling;
-    if (input.type === 'password') {
-      input.type = 'text';
-      toggle.textContent = '🙈';
-    } else {
-      input.type = 'password';
-      toggle.textContent = '👁️';
-    }
-  };
-
-  // Função de logout
-  window.logout = () => {
-    console.log('Executando logout...');
-    localStorage.removeItem('loggedUser');
-    window.location.href = '/pages/admin/admin-home.html';
-  };
-
-  // Inicializar
-  populateAreas();
+  // Carregar áreas ao iniciar
+  loadAreas();
 });
+
+// Função de logout
+function logout() {
+  alert('Retornando ao Dashboard');
+  window.location.href = '/pages/admin/admin-home.html';
+}

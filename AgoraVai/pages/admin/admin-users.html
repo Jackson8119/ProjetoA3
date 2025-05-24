@@ -4,16 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <base href="/">
-  <title>Gerenciamento de Usuários</title>
+  <title>Administração de Usuários</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/user.css">
+  <link rel="stylesheet" href="/assets/css/user-create.css">
 </head>
 <body>
   <header>
     <div class="navbar">
       <div class="navbar-center">
         <span class="alert-icon">⚠</span>
-        <h1>Gestão de Incidentes</h1>
+        <h1>Administração de Usuários</h1>
       </div>
       <div class="navbar-right">
         <button class="logout-btn" onclick="logout()">Retornar ao Dashboard</button>
@@ -39,41 +39,35 @@
       </ul>
     </nav>
     <main>
-      <div class="error-message" id="error-message" style="color: #d32f2f; text-align: center; display: none;">Dashboard não implementado para este tipo de usuário.</div>
       <div class="header-section">
         <div class="title-bar">
-          <h2>Gerenciamento de Usuários</h2>
-          <button class="new-user-btn" onclick="window.location.href='/pages/admin/admin-users-create.html'">
-            <span>+</span> Novo Usuário
-          </button>
+          <h2>Gerenciar Usuários</h2>
         </div>
-        <div class="subtitle">Cadastre e gerencie usuários do sistema</div>
+        <div class="subtitle">Visualize, edite ou remova usuários cadastrados no sistema.</div>
       </div>
-      <div class="header-bar">
-        <div class="search-bar">
-          <span class="search-icon" onclick="toggleSearch()">🔍</span>
-          <input type="text" id="search-input" placeholder="Buscar por nome, login ou email..." aria-label="Buscar usuários">
-        </div>
+      <div class="table-container">
+        <table id="users-table">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Login</th>
+              <th>Tipo</th>
+              <th>Área</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
       <div id="message" class="message"></div>
-      <div class="users-grid" id="users-grid">
-        <!-- Usuários serão preenchidos via JS -->
-      </div>
     </main>
   </div>
-  <script src="/assets/js/user.js"></script>
+  <script src="/assets/js/admin-users.js"></script>
   <script>
     const toggleSidebar = () => {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('show');
-    };
-
-    const toggleSearch = () => {
-      const searchInput = document.getElementById('search-input');
-      searchInput.classList.toggle('active');
-      if (searchInput.classList.contains('active')) {
-        searchInput.focus();
-      }
     };
 
     const toggleSubmenu = (event) => {
@@ -81,6 +75,11 @@
       const submenu = event.target.closest('a').nextElementSibling;
       submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
     };
+
+    function logout() {
+      alert('Retornando ao Dashboard');
+      window.location.href = '/pages/admin/admin-home.html';
+    }
   </script>
 </body>
 </html>
