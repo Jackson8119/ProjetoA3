@@ -46,71 +46,68 @@
         <div class="subtitle">Preencha o formulário abaixo para cadastrar um novo usuário no sistema.</div>
       </div>
       <form id="user-form">
-        <div class="form-grid">
-          <div class="form-column">
-            <div class="form-group">
-              <label for="user-nome">Nome completo</label>
-              <div class="input-wrapper">
-                <span class="input-icon">🧍‍♂️</span>
-                <input type="text" id="user-nome" name="user-nome" placeholder="Digite o nome completo" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="user-login">Login</label>
-              <div class="input-wrapper">
-                <span class="input-icon">🧍‍♂️</span>
-                <input type="text" id="user-login" name="user-login" placeholder="Digite o login" required>
-              </div>
-            </div>
-            <div class="form-group" id="area-group" style="display: none;">
-              <label for="user-area">Área de atuação</label>
-              <div class="input-wrapper">
-                <span class="input-icon">💼</span>
-                <select id="user-area" name="user-area">
-                  <option value="" disabled selected>Selecione a área de atuação</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="user-senha">Senha</label>
-              <div class="input-wrapper">
-                <span class="input-icon">🔑</span>
-                <input type="password" id="user-senha" name="user-senha" placeholder="Digite a senha" required>
-                <span class="toggle-password" onclick="togglePassword('user-senha')">👁️</span>
-              </div>
+        <div class="form-container">
+          <div class="form-group">
+            <label for="user-nome">Nome completo</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🧍‍♂️</span>
+              <input type="text" id="user-nome" name="user-nome" placeholder="Digite o nome completo" required>
             </div>
           </div>
-          <div class="form-column">
-            <div class="form-group">
-              <label for="user-email">Email</label>
-              <div class="input-wrapper">
-                <span class="input-icon">✉️</span>
-                <input type="email" id="user-email" name="user-email" placeholder="Digite o email" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="user-tipo">Tipo de usuário</label>
-              <div class="input-wrapper">
-                <select id="user-tipo" name="user-tipo" required>
-                  <option value="" disabled selected>Selecione o tipo de usuário</option>
-                  <option value="Gerenciador">Gerenciador</option>
-                  <option value="Administrador">Administrador</option>
-                  <option value="Operador">Operador</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="user-confirmar-senha">Confirmar senha</label>
-              <div class="input-wrapper">
-                <span class="input-icon">🔑</span>
-                <input type="password" id="user-confirmar-senha" name="user-confirmar-senha" placeholder="Confirme a senha" required>
-                <span class="toggle-password" onclick="togglePassword('user-confirmar-senha')">👁️</span>
-              </div>
+          <div class="form-group">
+            <label for="user-email">Email</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="user-email" name="user-email" placeholder="Digite o email" required>
             </div>
           </div>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="submit-btn">Cadastrar Usuário</button>
+          <div class="form-group">
+            <label for="user-login">Login</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🧍‍♂️</span>
+              <input type="text" id="user-login" name="user-login" placeholder="Digite o login" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="user-tipo">Tipo de usuário</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <select id="user-tipo" name="user-tipo" required>
+                <option value="" disabled selected>Selecione o tipo de usuário</option>
+                <option value="Gerenciador">Gerenciador</option>
+                <option value="Administrador">Administrador</option>
+                <option value="Operador">Operador</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" id="area-group" style="display: none;">
+            <label for="user-area">Área de atuação</label>
+            <div class="input-wrapper">
+              <span class="input-icon">💼</span>
+              <select id="user-area" name="user-area">
+                <option value="" disabled selected>Selecione a área de atuação</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="user-senha">Senha</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input type="password" id="user-senha" name="user-senha" placeholder="Digite a senha" required>
+              <span class="toggle-password" onclick="togglePassword('user-senha')">👁️</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="user-confirmar-senha">Confirmar senha</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input type="password" id="user-confirmar-senha" name="user-confirmar-senha" placeholder="Confirme a senha" required>
+              <span class="toggle-password" onclick="togglePassword('user-confirmar-senha')">👁️</span>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="submit-btn">Cadastrar Usuário</button>
+          </div>
         </div>
       </form>
       <div id="message" class="message"></div>
