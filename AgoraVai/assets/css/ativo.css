@@ -76,7 +76,7 @@ h1 {
 .menu-toggle {
   position: fixed;
   top: 95px;
-  left: 20px; /* Mantido, pode ser ajustado para 10px */
+  left: 20px;
   font-size: 24px;
   cursor: pointer;
   color: #333333;
@@ -90,7 +90,7 @@ h1 {
 }
 
 .sidebar {
-  width: 120px;
+  width: 180px;
   background: #000000;
   padding: 20px 0;
   position: fixed;
@@ -129,9 +129,13 @@ h1 {
   margin-bottom: 20px;
 }
 
+.sidebar li.has-submenu > a {
+  position: relative;
+}
+
 .sidebar a {
   color: #FFFFFF;
-  font-size: 18px;
+  font-size: 20px;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -152,12 +156,34 @@ h1 {
 }
 
 .sidebar a .icon {
-  font-size: 24px;
+  font-size: 26px;
   flex-shrink: 0;
 }
 
 .sidebar a .label {
   display: inline;
+}
+
+.sidebar .submenu {
+  display: none;
+  background: #000000;
+  padding-left: 30px;
+}
+
+.sidebar .submenu li {
+  margin-bottom: 10px;
+}
+
+.sidebar .submenu a {
+  font-size: 20px;
+  padding: 10px 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sidebar .submenu a .icon {
+  font-size: 26px;
 }
 
 main {
@@ -168,7 +194,7 @@ main {
 }
 
 .sidebar.show + main {
-  margin-left: 120px;
+  margin-left: 180px;
 }
 
 .header-section {
@@ -180,7 +206,7 @@ main {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
-  margin-left: 40px; /* Deslocado para a direita */
+  margin-left: 40px;
 }
 
 .header-section h2 {
@@ -194,7 +220,7 @@ main {
   font-size: 16px;
   color: #888888;
   margin-bottom: 10px;
-  margin-left: 40px; /* Deslocado para a direita */
+  margin-left: 40px;
 }
 
 .header-bar {
@@ -208,8 +234,8 @@ main {
   position: relative;
   display: flex;
   align-items: center;
-  margin-left: 40px; /* Alinhado com subtítulo e cards */
-  margin-top: 0; /* Alinhamento vertical ajustado */
+  margin-left: 40px;
+  margin-top: 0;
 }
 
 .search-icon {
@@ -255,7 +281,7 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
-  margin-left: 40px; /* Deslocado para a direita */
+  margin-left: 40px;
 }
 
 .ativo-card {
@@ -291,13 +317,13 @@ main {
 }
 
 .ativo-area-tag {
-  display: inline-block;
   background-color: #BBDEFB;
   color: #000000;
   padding: 5px 10px;
   border-radius: 3px;
   font-size: 14px;
   margin-bottom: 10px;
+  display: inline-block;
 }
 
 .ativo-footer {
@@ -370,8 +396,8 @@ main {
 }
 
 .form-group input,
-.form-group select,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -438,7 +464,7 @@ main {
   }
   .search-bar {
     width: 100%;
-    margin-left: 0; /* Reset para dispositivos móveis */
+    margin-left: 0;
   }
   .title-bar {
     flex-direction: column;
@@ -449,6 +475,6 @@ main {
     justify-content: center;
   }
   .title-bar, .subtitle, .ativos-grid {
-    margin-left: 20px; /* Menos deslocamento em telas pequenas */
+    margin-left: 20px;
   }
 }

@@ -90,7 +90,7 @@ h1 {
 }
 
 .sidebar {
-  width: 120px;
+  width: 180px;
   background: #000000;
   padding: 20px 0;
   position: fixed;
@@ -129,9 +129,13 @@ h1 {
   margin-bottom: 20px;
 }
 
+.sidebar li.has-submenu > a {
+  position: relative;
+}
+
 .sidebar a {
   color: #FFFFFF;
-  font-size: 18px;
+  font-size: 20px;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -152,12 +156,34 @@ h1 {
 }
 
 .sidebar a .icon {
-  font-size: 24px;
+  font-size: 26px;
   flex-shrink: 0;
 }
 
 .sidebar a .label {
   display: inline;
+}
+
+.sidebar .submenu {
+  display: none;
+  background: #000000;
+  padding-left: 30px;
+}
+
+.sidebar .submenu li {
+  margin-bottom: 10px;
+}
+
+.sidebar .submenu a {
+  font-size: 20px;
+  padding: 10px 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sidebar .submenu a .icon {
+  font-size: 26px;
 }
 
 main {
@@ -168,7 +194,7 @@ main {
 }
 
 .sidebar.show + main {
-  margin-left: 120px;
+  margin-left: 180px;
 }
 
 .header-section {

@@ -25,7 +25,13 @@
     <nav class="sidebar" id="sidebar">
       <ul>
         <li><a href="/pages/admin/admin-home.html" data-section="inicio"><span class="icon">🏠</span><span class="label">Início</span></a></li>
-        <li><a href="/pages/admin/admin-users.html" data-section="usuarios"><span class="icon">👥</span><span class="label">Usuários</span></a></li>
+        <li class="has-submenu">
+          <a href="#" data-section="usuarios" onclick="toggleSubmenu(event)"><span class="icon">👥</span><span class="label">Usuários</span></a>
+          <ul class="submenu" style="display: none;">
+            <li><a href="/pages/admin/admin-users-create.html" data-section="cadastrar"><span class="icon">➕</span>Cadastrar</a></li>
+            <li><a href="/pages/admin/admin-users.html" data-section="administrar"><span class="icon">⚙️</span>Administrar</a></li>
+          </ul>
+        </li>
         <li><a href="/pages/admin/admin-areas.html" class="active" data-section="areas"><span class="icon">🏢</span><span class="label">Áreas</span></a></li>
         <li><a href="/pages/admin/admin-ativos.html" data-section="ativos"><span class="icon">⚙️</span><span class="label">Ativos</span></a></li>
         <li><a href="#" data-section="planos-acao"><span class="icon">📅</span><span class="label">Planos de ação</span></a></li>
@@ -87,6 +93,12 @@
       if (searchInput.classList.contains('active')) {
         searchInput.focus();
       }
+    };
+
+    const toggleSubmenu = (event) => {
+      event.preventDefault();
+      const submenu = event.target.closest('a').nextElementSibling;
+      submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
     };
   </script>
 </body>
