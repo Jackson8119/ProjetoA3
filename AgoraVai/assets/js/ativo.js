@@ -8,12 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalTitle = document.getElementById('modal-title');
   let editingIndex = null;
 
+  // Verificar elementos DOM
+  if (!form || !message || !ativosGrid || !areaSelect || !searchInput || !modal || !modalTitle) {
+    console.error('Erro: Um ou mais elementos DOM não foram encontrados.');
+    return;
+  }
+
   // Verificar se o usuário é administrador
   const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
   if (!loggedUser || loggedUser.tipo !== 'Administrador') {
     console.log('Usuário não é administrador ou não está logado. Redirecionando para login...');
-    console.log('Tentando caminho relativo: ../../login.html');
-    window.location.href = '../../login.html';
+    window.location.href = '/login.html';
+    return;
   }
 
   // Carregar áreas e ativos do localStorage
@@ -41,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Exibir lista de ativos
   const displayAtivos = (ativosToDisplay) => {
+    console.log('Atualizando grade de ativos...');
     const ativos = ativosToDisplay || loadAtivos();
     ativosGrid.innerHTML = '';
     if (ativos.length === 0) {
@@ -90,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Funções do modal
-  const openModal = (mode, index) => {
+  window.openModal = (mode, index) => {
     editingIndex = mode === 'edit' ? index : null;
     modalTitle.textContent = mode === 'edit' ? 'Editar Ativo' : 'Cadastrar Novo Ativo';
     form.reset();
@@ -103,14 +110,14 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.style.display = 'block';
   };
 
-  const closeModal = () => {
+  window.closeModal = () => {
     modal.style.display = 'none';
     form.reset();
     editingIndex = null;
   };
 
   // Deletar ativo
-  const deleteAtivo = (index) => {
+  window.deleteAtivo = (index) => {
     if (confirm('Deseja excluir este ativo?')) {
       const ativos = loadAtivos();
       ativos.splice(index, 1);
@@ -158,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dataCriacao: new Date().toLocaleDateString('pt-BR')
       };
       ativos.push(novoAtivo);
+      console.log('Novo ativo criado:', novoAtivo);
       showMessage('Ativo criado com sucesso!', 'success');
     } else {
       ativos[editingIndex] = {
@@ -166,6 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descricao: ativoDescricao,
         area: ativoArea
       };
+      console.log('Ativo atualizado:', ativos[editingIndex]);
       showMessage('Ativo atualizado com sucesso!', 'success');
     }
 
@@ -187,19 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Função de logout
-  const logout = () => {
+  window.logout = () => {
     console.log('Executando logout...');
     localStorage.removeItem('loggedUser');
-    console.log('Redirecionando para ../../login.html');
-    window.location.href = '../../login.html';
+    window.location.href = '/pages/admin/admin-home.html';
   };
 
   // Inicializar
   populateAreas();
   displayAtivos();
-
-  window.openModal = openModal;
-  window.closeModal = closeModal;
-  window.deleteAtivo = deleteAtivo;
-  window.logout = logout;
 });

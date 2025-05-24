@@ -7,183 +7,6 @@
   <title>Gerenciamento de Ativos</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/ativo.css">
-  <style>
-    /* Ajustes para a sidebar */
-    .sidebar {
-      width: 200px;
-      background-color: rgba(0, 0, 0, 0);
-      position: fixed;
-      top: 60px;
-      left: 0;
-      height: calc(100vh - 60px);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease, background-color 0.3s ease;
-      z-index: 1000;
-    }
-    .sidebar.show {
-      opacity: 1;
-      visibility: visible;
-      background-color: rgba(0, 0, 0, 0.8);
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .sidebar ul li {
-      padding: 15px 0;
-      text-align: left;
-      padding-left: 20px;
-    }
-    .sidebar ul li a {
-      color: white;
-      text-decoration: none;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sidebar ul li a .icon {
-      opacity: 0;
-      font-size: 24px;
-      transition: opacity 0.3s ease;
-    }
-    .sidebar ul li a .label {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .sidebar.show ul li a .icon {
-      opacity: 1;
-    }
-    .sidebar.show ul li a .label {
-      display: inline;
-      opacity: 1;
-    }
-    .sidebar ul li.footer-item {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
-    }
-
-    /* Ícone de menu (três pontinhos) */
-    .menu-toggle {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      font-size: 24px;
-      cursor: pointer;
-      color: white;
-      z-index: 2000;
-    }
-
-    /* Ajuste para o header */
-    header {
-      background-color: #ff3d00;
-      color: white;
-      padding: 0;
-      text-align: center;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      height: 60px; /* Altura fixa para centralização vertical */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 500;
-    }
-    .navbar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-    }
-    .navbar-center {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      height: 100%;
-    }
-    .navbar-right {
-      position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    .logout-btn {
-      background-color: #ff3d00;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .logout-btn:hover {
-      background-color: #ff5722;
-    }
-
-    /* Ajuste para o botão Novo Ativo */
-    .new-ativo-btn {
-      background-color: #ff3d00;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .new-ativo-btn:hover {
-      background-color: #ff5722;
-    }
-
-    /* Ajuste para o main */
-    main {
-      margin-left: 0;
-      padding: 60px 20px 20px;
-      transition: margin-left 0.3s ease;
-    }
-    .header-section {
-      margin-top: 10px;
-    }
-    .header-section h2 {
-      margin-bottom: 5px;
-    }
-    .subtitle {
-      margin-bottom: 15px;
-    }
-
-    /* Ajuste para a barra de busca */
-    .search-bar {
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-    .search-icon {
-      font-size: 20px;
-      cursor: pointer;
-      opacity: 0.5;
-      transition: opacity 0.3s ease;
-    }
-    .search-icon:hover {
-      opacity: 1;
-    }
-    #search-input {
-      width: 0;
-      padding: 0;
-      border: none;
-      border-radius: 5px;
-      transition: width 0.3s ease, padding 0.3s ease;
-      outline: none;
-    }
-    #search-input.active {
-      width: 200px;
-      padding: 8px;
-      border: 1px solid #ddd;
-    }
-  </style>
 </head>
 <body>
   <header>
@@ -193,7 +16,7 @@
         <h1>Gestão de Incidentes</h1>
       </div>
       <div class="navbar-right">
-        <button class="logout-btn" onclick="returnToDashboard()">Retornar ao Dashboard</button>
+        <button class="logout-btn" onclick="logout()">Retornar ao Dashboard</button>
       </div>
     </div>
   </header>
@@ -201,18 +24,23 @@
   <div class="container">
     <nav class="sidebar" id="sidebar">
       <ul>
-        <li><a href="/pages/admin/admin-home.html" data-section="incidente"><span class="icon">🚨</span><span class="label">Incidente</span></a></li>
+        <li><a href="/pages/admin/admin-home.html" data-section="inicio"><span class="icon">🏠</span><span class="label">Início</span></a></li>
         <li><a href="/pages/admin/admin-users.html" data-section="usuarios"><span class="icon">👥</span><span class="label">Usuários</span></a></li>
-        <li><a href="#" data-section="listagem"><span class="icon">📋</span><span class="label">Listagem</span></a></li>
+        <li><a href="#" data-section="areas"><span class="icon">🏢</span><span class="label">Áreas</span></a></li>
         <li><a href="/pages/admin/admin-ativos.html" class="active" data-section="ativos"><span class="icon">⚙️</span><span class="label">Ativos</span></a></li>
-        <li><a href="#" data-section="documento"><span class="icon">📄</span><span class="label">Documento</span></a></li>
+        <li><a href="#" data-section="planos-acao"><span class="icon">📅</span><span class="label">Planos de ação</span></a></li>
         <li class="footer-item"><a href="#" data-section="perfil"><span class="icon">👤</span><span class="label">Perfil</span></a></li>
       </ul>
     </nav>
     <main>
       <div class="error-message" id="error-message" style="color: #d32f2f; text-align: center; display: none;">Dashboard não implementado para este tipo de usuário.</div>
       <div class="header-section">
-        <h2>Gerenciamento de Ativos</h2>
+        <div class="title-bar">
+          <h2>Gerenciamento de Ativos</h2>
+          <button class="new-ativo-btn" onclick="openModal('new')">
+            <span>+</span> Novo Ativo
+          </button>
+        </div>
         <div class="subtitle">Cadastre e gerencie ativos do sistema</div>
       </div>
       <div class="header-bar">
@@ -220,12 +48,10 @@
           <span class="search-icon" onclick="toggleSearch()">🔍</span>
           <input type="text" id="search-input" placeholder="Buscar por nome, descrição ou área..." aria-label="Buscar ativos">
         </div>
-        <button class="new-ativo-btn" onclick="openModal('new')">
-          <span>+</span> Novo Ativo
-        </button>
       </div>
+      <div id="message" class="message"></div>
       <div class="ativos-grid" id="ativos-grid">
-        <!-- Ativos serão preenchidas via JS -->
+        <!-- Ativos serão preenchidos via JS -->
       </div>
       <div class="modal" id="ativo-modal">
         <div class="modal-content">
@@ -243,7 +69,6 @@
               <label for="ativo-area">Área Responsável:</label>
               <select id="ativo-area" name="ativo-area" required>
                 <option value="" disabled selected>Selecione uma área</option>
-                <!-- Áreas serão preenchidas via JS -->
               </select>
             </div>
             <div class="modal-actions">
@@ -257,22 +82,9 @@
   </div>
   <script src="/assets/js/ativo.js"></script>
   <script>
-    const loggedUser = JSON.parse(localStorage.getItem('loggedUser') || '{}');
-    const errorMessage = document.getElementById('error-message');
-    if (loggedUser && loggedUser.tipo !== 'Administrador') {
-      errorMessage.style.display = 'block';
-      setTimeout(() => {
-        window.location.href = '/login.html';
-      }, 2000);
-    }
-
     const toggleSidebar = () => {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('show');
-    };
-
-    const returnToDashboard = () => {
-      window.location.href = '/pages/admin/admin-home.html';
     };
 
     const toggleSearch = () => {
